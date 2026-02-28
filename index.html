@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Save the Date - Farbeen & Tommy</title>
+    <style>
+        :root {
+            /* Color palette matching the reference image */
+            --bg-color: #f0ece3;
+            --text-dark: #D84733; /* Updated to a pop of red */
+            --outline-color: #bebaa9;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            /* Hide horizontal scrollbar to prevent wobbling */
+            overflow-x: hidden; 
+        }
+
+        /* --- BACKGROUND LAYER --- */
+        .bg-layer {
+            position: fixed; 
+            top: -100vh; /* Start much higher to prevent blank space when scrolling */
+            left: 0;
+            width: 100vw;
+            height: 300vh; /* Increased height to ensure it covers the screen during full scroll */
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            pointer-events: none; /* Prevents text selection on the background */
+        }
+
+        .bg-line {
+            font-size: 11vw; /* Responsive font sizing */
+            font-weight: 800;
+            color: transparent;
+            /* Creates the hollow text effect */
+            -webkit-text-stroke: 1.5px var(--outline-color);
+            line-height: 1.1;
+            white-space: nowrap;
+            text-align: left;
+            width: 200vw;
+            margin-left: 0vw; /* Shifted left to balance Farbeen and Tommy */
+            letter-spacing: -0.02em;
+        }
+
+        /* --- FOREGROUND LAYER --- */
+        .content-layer {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            /* Make the page 250% of the screen height to allow for plenty of scrolling */
+            height: 250vh; 
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 45vh 0; /* Increased to center the top/bottom text precisely on screen */
+            box-sizing: border-box;
+        }
+
+        .fg-text {
+            font-size: 12vw; 
+            font-weight: 800;
+            color: var(--text-dark);
+            text-align: center;
+            margin: 0;
+            text-transform: uppercase;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            /* Adds a subtle background-colored outline to the solid text so it remains 
+               readable even if it overlaps perfectly with the background text lines */
+            text-shadow: 
+                -4px -4px 0 var(--bg-color),  
+                 4px -4px 0 var(--bg-color),
+                -4px  4px 0 var(--bg-color),
+                 4px  4px 0 var(--bg-color);
+        }
+
+        /* Custom spacing to format "SAN FRANCISCO" nicely */
+        .location {
+            word-spacing: 2vw;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- This div holds the repeating background text -->
+    <div class="bg-layer" id="parallax-bg"></div>
+
+    <!-- This div holds the bold scrolling text -->
+    <div class="content-layer">
+        <h1 class="fg-text">SEPT 19 2026</h1>
+        <h1 class="fg-text location">SAN FRANCISCO</h1>
+        <h1 class="fg-text">SAVE THE DATE</h1>
+    </div>
+
+    <script>
+        // 1. Generate the repeating background text
+        const bgLayer = document.getElementById('parallax-bg');
+        const numLines = 80; // Increased to ensure enough lines fill the extra height
+        
+        let bgHtml = '';
+        for (let i = 0; i < numLines; i++) {
+            // Repeating the names multiple times so it stretches across any screen width
+            bgHtml += '<div class="bg-line">FARBEEN&TOMMY FARBEEN&TOMMY FARBEEN&TOMMY FARBEEN&TOMMY</div>';
+        }
+        bgLayer.innerHTML = bgHtml;
+
+        // 2. Handle the Parallax Scroll Effect
+        let ticking = false;
+        
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const scrollPos = window.scrollY;
+                    // Move the background downwards at 40% the speed of the user's scroll
+                    bgLayer.style.transform = `translateY(${scrollPos * 0.4}px)`;
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+    </script>
+</body>
+</html>
