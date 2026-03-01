@@ -135,8 +135,8 @@
 
         .espresso-liquid {
             position: absolute;
-            top: 120px;
-            /* Tucked slightly higher so it emerges from behind the basket */
+            top: 116px;
+            /* Shifted down to match the new portafilter position */
             left: 50%;
             transform: translateX(-50%);
             width: 6px;
@@ -156,7 +156,9 @@
             height: 10px;
             background-color: var(--espresso-color);
             border-radius: 50%;
-            transform: translate(-50%, -50%) scale(0);
+            /* Removed the CSS transform so GSAP can take full control */
+            opacity: 0;
+            /* Keeps the dot perfectly hidden before the animation triggers */
             z-index: 20;
             pointer-events: none;
         }
@@ -292,33 +294,33 @@
                 <svg width="300" height="150" viewBox="0 0 300 150" fill="var(--bg-color)" stroke="var(--sketch-color)"
                     stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
 
-                    <!-- Machine Top Block with Depth Line -->
-                    <rect x="20" y="8" width="260" height="44" rx="6" />
-                    <!-- Left depth line -->
-                    <line x1="35" y1="30" x2="115" y2="30" />
+                    <!-- Machine Top Block (1.5x taller) -->
+                    <rect x="20" y="8" width="260" height="66" rx="6" />
+                    <!-- Left depth line (Centered vertically inside the taller block) -->
+                    <line x1="35" y1="41" x2="115" y2="41" />
                     <!-- Right depth line -->
-                    <line x1="185" y1="30" x2="265" y2="30" />
+                    <line x1="185" y1="41" x2="265" y2="41" />
 
-                    <!-- Pressure Gauge (Speedometer style) -->
-                    <path d="M 137.5 40 A 16 16 0 1 1 162.5 40" fill="none" />
-                    <!-- Gauge Needle (Red) - Fixed disappearance by using a filled polygon in a group -->
+                    <!-- Pressure Gauge (Speedometer style - shifted down to match new center) -->
+                    <path d="M 137.5 51 A 16 16 0 1 1 162.5 51" fill="none" />
+                    <!-- Gauge Needle (Red) -->
                     <g class="gauge-needle">
-                        <polygon points="148,30 152,30 150,16" fill="var(--text-dark)" stroke="none" />
+                        <polygon points="148,41 152,41 150,27" fill="var(--text-dark)" stroke="none" />
                     </g>
                     <!-- Gauge Center Pin -->
-                    <circle cx="150" cy="30" r="3.5" fill="var(--sketch-color)" stroke="none" />
+                    <circle cx="150" cy="41" r="3.5" fill="var(--sketch-color)" stroke="none" />
 
-                    <!-- Machine Upper Body -->
-                    <rect x="80" y="52" width="140" height="38" rx="6" />
+                    <!-- Machine Upper Body (Connecting plate made taller/sturdier) -->
+                    <rect x="80" y="74" width="140" height="12" rx="3" />
 
-                    <!-- Portafilter Group (This is what rotates) -->
+                    <!-- Portafilter Group (Shifted down 10px to connect to the new taller plate) -->
                     <g class="portafilter">
                         <!-- Upper Rim -->
-                        <rect x="100" y="90" width="100" height="10" rx="3" />
+                        <rect x="100" y="86" width="100" height="10" rx="3" />
                         <!-- Basket (Bottomless) -->
-                        <path d="M 115 100 L 185 100 L 178 118 Q 175 125 168 125 L 132 125 Q 125 125 122 118 Z" />
+                        <path d="M 115 96 L 185 96 L 178 114 Q 175 121 168 121 L 132 121 Q 125 121 122 114 Z" />
                         <!-- Handle -->
-                        <rect x="195" y="93" width="90" height="14" rx="7" />
+                        <rect x="195" y="89" width="90" height="14" rx="7" />
                     </g>
                 </svg>
                 <div class="espresso-liquid"></div>
@@ -370,11 +372,13 @@
         gsap.registerPlugin(ScrollTrigger);
 
         // Pre-rotate the portafilter handle
-        // svgOrigin prevents cross-browser transformation bugs that make SVG parts disappear
-        gsap.set(".portafilter", { rotation: -50, svgOrigin: "150 95" });
+        // svgOrigin adjusted to properly pivot from the new shifted location
+        gsap.set(".portafilter", { rotation: -50, svgOrigin: "150 91" });
         // Set the initial left-leaning rotation for the gauge needle
-        gsap.set(".gauge-needle", { rotation: -60, svgOrigin: "150 30" });
+        gsap.set(".gauge-needle", { rotation: -60, svgOrigin: "150 41" });
 
+        // Take full GSAP control of the flood placement so the beige dot stays hidden
+        gsap.set(".espresso-flood", { scale: 0, xPercent: -50, yPercent: -50 });
         gsap.set(".agenda-content", { xPercent: -50, yPercent: -50 });
 
         const tl = gsap.timeline({
@@ -412,6 +416,7 @@
             }, "-=0.5")
             // 4. Espresso flood scales up
             .to(".espresso-flood", {
+                opacity: 1, // Becomes visible exactly as it starts to explode
                 scale: 250,
                 duration: 2.5,
                 ease: "power3.inOut"
