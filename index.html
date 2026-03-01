@@ -279,9 +279,9 @@
 
     <!-- 2. Foreground Initial Scroll Content -->
     <div class="content-layer">
-        <h1 class="fg-text">SEPT 19 2026</h1>
-        <h1 class="fg-text location">SAN FRANCISCO</h1>
-        <h1 class="fg-text">SAVE THE DATE</h1>
+        <h1 class="fg-text" id="section-date">SEPT 19 2026</h1>
+        <h1 class="fg-text location" id="section-location">SAN FRANCISCO</h1>
+        <h1 class="fg-text" id="section-save">SAVE THE DATE</h1>
     </div>
 
     <!-- 3. The GSAP Coffee Rave Section -->
@@ -487,70 +487,88 @@
                 ease: "power2.out"
             });
 
-        // --- 4. AUTO-SCROLL HELPER FOR COFFEE SECTION ---
-        // If user pauses at the coffee section, auto-scroll to guide them through
-        let hasAutoScrolled = false;
-        let pauseTimer = null;
+        // --- 4. AUTO-SCROLL HELPER FOR ALL SECTIONS ---
+        // If user pauses at any section, auto-scroll to the next section
         const pauseThreshold = 2000; // 2 seconds of no scrolling
 
         console.log('[AutoScroll] Initialized');
 
-        function clearPauseTimer() {
-            if (pauseTimer) {
-                console.log('[AutoScroll] Scroll detected, clearing timer');
-                clearTimeout(pauseTimer);
-                pauseTimer = null;
-            }
-        }
+        // Define sections and their scroll targets (offsetY is fraction of viewport height)
+        const autoScrollSections = [
+            { trigger: "#section-date", target: "#section-location", duration: 1, offsetY: 0.3 },
+            { trigger: "#section-location", target: "#section-save", duration: 1, offsetY: 0.3 },
+            { trigger: "#section-save", target: ".coffee-section", duration: 1, offsetY: -0.1 },
+            { trigger: ".coffee-section", target: "coffee-end", duration: 3.5 } // Special case: scroll through animation
+        ];
 
-        function startPauseTimer() {
-            if (hasAutoScrolled) return;
+        // Create autoscroll trigger for each section
+        autoScrollSections.forEach((section, index) => {
+            let hasAutoScrolled = false;
+            let pauseTimer = null;
 
-            clearPauseTimer();
-            console.log('[AutoScroll] Starting pause timer...');
-
-            pauseTimer = setTimeout(() => {
-                if (hasAutoScrolled) return;
-                hasAutoScrolled = true;
-
-                const coffeeSection = document.querySelector('.coffee-section');
-                const sectionTop = coffeeSection.offsetTop;
-                const scrollEnd = sectionTop + (window.innerHeight * 6.5); // Extended to fully complete animation
-
-                console.log('[AutoScroll] Pause detected, triggering scroll!', { sectionTop, scrollEnd });
-
-                gsap.to(window, {
-                    scrollTo: scrollEnd,
-                    duration: 3.5,
-                    ease: "power1.inOut"
-                });
-            }, pauseThreshold);
-        }
-
-        ScrollTrigger.create({
-            trigger: ".coffee-section",
-            start: "top 80%",
-            end: "bottom top",
-            onEnter: () => {
-                console.log('[AutoScroll] Entered coffee section');
-                startPauseTimer();
-            },
-            onLeave: () => {
-                console.log('[AutoScroll] Left coffee section');
-                clearPauseTimer();
-                hasAutoScrolled = false; // Reset so it can trigger again on re-entry
-            },
-            onLeaveBack: () => {
-                console.log('[AutoScroll] Scrolled back up out of coffee section');
-                clearPauseTimer();
-                hasAutoScrolled = false; // Reset so it can trigger again on re-entry
-            },
-            onUpdate: () => {
-                // Any scroll activity resets the pause timer
-                if (pauseTimer && !hasAutoScrolled) {
-                    startPauseTimer();
+            function clearPauseTimer() {
+                if (pauseTimer) {
+                    clearTimeout(pauseTimer);
+                    pauseTimer = null;
                 }
             }
+
+            function startPauseTimer() {
+                if (hasAutoScrolled) return;
+
+                clearPauseTimer();
+                console.log(`[AutoScroll] Starting pause timer for ${section.trigger}...`);
+
+                pauseTimer = setTimeout(() => {
+                    if (hasAutoScrolled) return;
+                    hasAutoScrolled = true;
+
+                    console.log(`[AutoScroll] Pause detected at ${section.trigger}, scrolling to ${section.target}`);
+
+                    if (section.target === "coffee-end") {
+                        // Special case: scroll through entire coffee animation
+                        const coffeeSection = document.querySelector('.coffee-section');
+                        const coffeeTop = coffeeSection.getBoundingClientRect().top + window.scrollY;
+                        gsap.to(window, {
+                            scrollTo: coffeeTop + (window.innerHeight * 6.5),
+                            duration: section.duration,
+                            ease: "power1.inOut"
+                        });
+                    } else {
+                        // Scroll to the next section element using GSAP's element targeting
+                        gsap.to(window, {
+                            scrollTo: { y: section.target, offsetY: window.innerHeight * section.offsetY },
+                            duration: section.duration,
+                            ease: "power1.inOut"
+                        });
+                    }
+                }, pauseThreshold);
+            }
+
+            ScrollTrigger.create({
+                trigger: section.trigger,
+                start: "top 80%",
+                end: "bottom 20%",
+                onEnter: () => {
+                    console.log(`[AutoScroll] Entered ${section.trigger}`);
+                    startPauseTimer();
+                },
+                onLeave: () => {
+                    console.log(`[AutoScroll] Left ${section.trigger}`);
+                    clearPauseTimer();
+                    hasAutoScrolled = false;
+                },
+                onLeaveBack: () => {
+                    console.log(`[AutoScroll] Scrolled back up out of ${section.trigger}`);
+                    clearPauseTimer();
+                    hasAutoScrolled = false;
+                },
+                onUpdate: () => {
+                    if (pauseTimer && !hasAutoScrolled) {
+                        startPauseTimer();
+                    }
+                }
+            });
         });
     </script>
 
