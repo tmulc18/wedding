@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,20 +11,26 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cedarville+Cursive&display=swap');
+
         :root {
             /* Color palette */
             --bg-color: #f0ece3;
-            --text-dark: #D20A2E; /* TensorFlow red */
+            --text-dark: #D20A2E;
+            /* TensorFlow red */
             --outline-color: #bebaa9;
-            --espresso-color: #d4c4b0; /* Light warm tan */
+            --espresso-color: #d4c4b0;
+            /* Light warm tan */
+            --sketch-color: #1a1a1a;
+            /* Dark charcoal for the line art */
         }
 
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             background-color: var(--bg-color);
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            overflow-x: hidden; 
+            overflow-x: hidden;
         }
 
         /* --- BACKGROUND LAYER --- */
@@ -40,7 +47,7 @@
         }
 
         .bg-line {
-            font-size: 11vw; 
+            font-size: 11vw;
             font-weight: 800;
             color: transparent;
             -webkit-text-stroke: 1.5px var(--outline-color);
@@ -48,7 +55,7 @@
             white-space: nowrap;
             text-align: left;
             width: 200vw;
-            margin-left: 0vw; 
+            margin-left: 0vw;
             letter-spacing: -0.02em;
         }
 
@@ -57,16 +64,16 @@
             position: relative;
             z-index: 2;
             width: 100%;
-            height: 250vh; 
+            height: 250vh;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 45vh 0; 
+            padding: 45vh 0;
             box-sizing: border-box;
         }
 
         .fg-text {
-            font-size: 12vw; 
+            font-size: 12vw;
             font-weight: 800;
             color: var(--text-dark);
             text-align: center;
@@ -74,11 +81,11 @@
             text-transform: uppercase;
             line-height: 1;
             letter-spacing: -0.03em;
-            text-shadow: 
-                -4px -4px 0 var(--bg-color),  
-                 4px -4px 0 var(--bg-color),
-                -4px  4px 0 var(--bg-color),
-                 4px  4px 0 var(--bg-color);
+            text-shadow:
+                -4px -4px 0 var(--bg-color),
+                4px -4px 0 var(--bg-color),
+                -4px 4px 0 var(--bg-color),
+                4px 4px 0 var(--bg-color);
         }
 
         .location {
@@ -88,15 +95,14 @@
         /* --- NEW: COFFEE RAVE SECTION --- */
         .coffee-section {
             position: relative;
-            height: 100vh; 
+            height: 100vh;
             width: 100vw;
-            z-index: 3; /* Above the background, below the flood */
+            z-index: 3;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            /* Transparent background so the parallax text shows through! */
-            background-color: transparent; 
+            background-color: transparent;
         }
 
         .machine-container {
@@ -107,7 +113,6 @@
             align-items: center;
         }
 
-        /* Styling the 'Lock in' text to match your theme */
         .lock-text {
             font-size: 8vw;
             margin-bottom: 2rem;
@@ -124,11 +129,12 @@
 
         .espresso-liquid {
             position: absolute;
-            top: 110px; /* Starts right at the tip of the portafilter spout */
+            top: 100px;
+            /* Aligned perfectly to the flat bottom of the basket */
             left: 50%;
             transform: translateX(-50%);
-            width: 12px;
-            height: 0px; /* Starts hidden */
+            width: 6px;
+            height: 0px;
             background-color: var(--espresso-color);
             border-radius: 0 0 10px 10px;
             z-index: 9;
@@ -144,7 +150,7 @@
             background-color: var(--espresso-color);
             border-radius: 50%;
             transform: translate(-50%, -50%) scale(0);
-            z-index: 20; /* Covers everything */
+            z-index: 20;
             pointer-events: none;
         }
 
@@ -153,19 +159,18 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            z-index: 30; /* Highest z-index, above the flood */
+            z-index: 30;
             text-align: center;
             width: 90%;
             max-width: 1100px;
-            opacity: 0; /* Hidden initially */
-            color: #333; /* Dark text for light background */
+            opacity: 0;
+            color: #333;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
 
-        /* Cursive style for the agenda title */
         .agenda-title {
             font-family: 'Cedarville Cursive', cursive;
             font-size: 8vw;
@@ -228,30 +233,41 @@
 
         /* Mobile Adjustments */
         @media (max-width: 768px) {
-            .agenda-title { font-size: 12vw; }
-            .agenda-list { font-size: 3.5vw; }
-            /* Stack the event, location, and time on mobile */
+            .agenda-title {
+                font-size: 12vw;
+            }
+
+            .agenda-list {
+                font-size: 3.5vw;
+            }
+
             .agenda-list li {
                 grid-template-columns: 1fr;
                 text-align: center;
                 gap: 0.25rem;
             }
+
             .agenda-list span.event,
             .agenda-list span.location,
             .agenda-list span.time {
                 text-align: center;
             }
-            .more-details { font-size: 4vw; }
-            .lock-text { font-size: 12vw; }
+
+            .more-details {
+                font-size: 4vw;
+            }
+
+            .lock-text {
+                font-size: 12vw;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- 1. Background Parallax Layer -->
-    <div class="bg-layer" id="parallax-bg">
-        <!-- Text is injected via JS to keep the HTML clean -->
-    </div>
+    <div class="bg-layer" id="parallax-bg"></div>
 
     <!-- 2. Foreground Initial Scroll Content -->
     <div class="content-layer">
@@ -266,20 +282,20 @@
             <h1 class="fg-text lock-text">LOCK IN TO PARTY</h1>
 
             <div class="svg-machine">
-                <svg width="300" height="150" viewBox="0 0 300 150">
-                    <!-- Machine Base / Grouphead -->
-                    <path d="M 80 0 L 220 0 L 220 40 L 80 40 Z" fill="#d4d1c4" />
-                    <path d="M 100 40 L 200 40 L 190 60 L 110 60 Z" fill="#a8a496" />
-                    <path d="M 115 60 L 185 60 L 185 65 L 115 65 Z" fill="#7a7668" />
+                <!-- Reverted to the distinct, structural sketch design -->
+                <svg width="300" height="150" viewBox="0 0 300 150" fill="var(--bg-color)" stroke="var(--sketch-color)"
+                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <!-- Machine Upper Body -->
+                    <rect x="80" y="25" width="140" height="40" rx="6" />
 
                     <!-- Portafilter Group (This is what rotates) -->
                     <g class="portafilter">
-                        <!-- Basket -->
-                        <path d="M 115 65 L 185 65 L 175 95 L 125 95 Z" fill="#222" />
-                        <!-- Spout -->
-                        <path d="M 145 95 L 155 95 L 155 110 L 145 110 Z" fill="#888" />
+                        <!-- Upper Rim -->
+                        <rect x="100" y="65" width="100" height="10" rx="3" />
+                        <!-- Basket (Bottomless) -->
+                        <path d="M 115 75 L 185 75 L 178 93 Q 175 100 168 100 L 132 100 Q 125 100 122 93 Z" />
                         <!-- Handle -->
-                        <rect x="180" y="70" width="100" height="15" rx="7.5" fill="#111" />
+                        <rect x="195" y="68" width="90" height="14" rx="7" />
                     </g>
                 </svg>
                 <div class="espresso-liquid"></div>
@@ -287,13 +303,15 @@
         </div>
     </section>
 
-    <!-- Fixed overlay elements (outside coffee-section for proper fixed positioning) -->
+    <!-- Fixed overlay elements -->
     <div class="espresso-flood"></div>
     <div class="agenda-content">
         <h2 class="agenda-title">details</h2>
         <ul class="agenda-list">
-            <li><span class="event">Dinner</span> <span class="location">TBD</span> <span class="time">6:00 PM</span></li>
-            <li><span class="event">Party</span> <span class="location">Hedge Coffee</span> <span class="time">10:30 PM</span></li>
+            <li><span class="event">Dinner</span> <span class="location">TBD</span> <span class="time">6:00 PM</span>
+            </li>
+            <li><span class="event">Party</span> <span class="location">Hedge Coffee</span> <span class="time">10:30
+                    PM</span></li>
         </ul>
         <p class="more-details">More details to come...</p>
     </div>
@@ -305,7 +323,7 @@
     <script>
         // --- 1. GENERATE BACKGROUND TEXT ---
         const bgLayer = document.getElementById('parallax-bg');
-        const numLines = 150; // Plenty of lines to cover the huge scroll depth
+        const numLines = 150;
         let bgHtml = '';
         for (let i = 0; i < numLines; i++) {
             bgHtml += '<div class="bg-line">FARBEEN&TOMMY FARBEEN&TOMMY FARBEEN&TOMMY FARBEEN&TOMMY</div>';
@@ -318,7 +336,6 @@
             if (!ticking) {
                 window.requestAnimationFrame(() => {
                     const scrollPos = window.scrollY;
-                    // Move background at 40% speed
                     bgLayer.style.transform = `translateY(${scrollPos * 0.4}px)`;
                     ticking = false;
                 });
@@ -329,52 +346,47 @@
         // --- 3. GSAP COFFEE RAVE ANIMATION ---
         gsap.registerPlugin(ScrollTrigger);
 
-        // Pre-rotate the portafilter handle (so it starts "unlocked")
-        // transformOrigin is set precisely to the center of the coffee basket in the SVG
-        gsap.set(".portafilter", { rotation: -50, transformOrigin: "150px 65px" });
-
-        // Set initial centering for agenda-content using GSAP (avoids CSS transform conflicts)
+        // Pre-rotate the portafilter handle
+        // transformOrigin adjusted perfectly for the new sketch SVG proportions
+        gsap.set(".portafilter", { rotation: -50, transformOrigin: "150px 70px" });
         gsap.set(".agenda-content", { xPercent: -50, yPercent: -50 });
 
-        // Create the scroll-bound timeline
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".coffee-section",
-                start: "top top", // Pin when section hits top of screen
-                end: "+=350%",    // User scrolls 3.5x screen height to complete animation
-                scrub: 1,         // Smooth scrubbing tied to scrollbar
-                pin: true,        // Pin the entire section in place
+                start: "top top",
+                end: "+=350%",
+                scrub: 1,
+                pin: true,
             }
         });
 
         tl.to(".portafilter", {
-            rotation: 0, 
+            rotation: 0,
             duration: 1.5,
             ease: "power2.inOut"
         })
-        .to(".espresso-liquid", {
-            height: "120vh", // Drop liquid past the bottom of the screen
-            duration: 2,
-            ease: "power1.in"
-        })
-        // Fade out the machine and text as the pour finishes
-        .to(".machine-container", {
-            opacity: 0,
-            duration: 0.5
-        }, "-=0.5") 
-        // Blow up the espresso circle to flood the screen
-        .to(".espresso-flood", {
-            scale: 250, 
-            duration: 2.5,
-            ease: "power3.inOut"
-        }, "-=0.2")
-        // Finally, fade in the new Rave Agenda
-        .to(".agenda-content", {
-            opacity: 1,
-            duration: 1.5,
-            ease: "power2.out"
-        });
+            .to(".espresso-liquid", {
+                height: "120vh",
+                duration: 2,
+                ease: "power1.in"
+            })
+            .to(".machine-container", {
+                opacity: 0,
+                duration: 0.5
+            }, "-=0.5")
+            .to(".espresso-flood", {
+                scale: 250,
+                duration: 2.5,
+                ease: "power3.inOut"
+            }, "-=0.2")
+            .to(".agenda-content", {
+                opacity: 1,
+                duration: 1.5,
+                ease: "power2.out"
+            });
     </script>
 
 </body>
+
 </html>
