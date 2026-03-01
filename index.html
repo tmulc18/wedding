@@ -122,29 +122,28 @@
         /* The SVG Espresso Machine */
         .svg-machine {
             position: relative;
-            width: 300px;
-            height: 150px;
+            width: 450px;
+            height: 180px;
             z-index: 10;
         }
 
         .svg-machine svg {
             position: relative;
             z-index: 10;
+            overflow: visible;
             /* Ensures the machine renders ON TOP of the liquid */
         }
 
         .espresso-liquid {
             position: absolute;
-            top: 116px;
-            /* Shifted down to match the new portafilter position */
+            top: 117px;
             left: 50%;
             transform: translateX(-50%);
-            width: 6px;
+            width: 8px;
             height: 0px;
             background-color: var(--espresso-color);
             border-radius: 0 0 10px 10px;
             z-index: 9;
-            /* Lower z-index than the SVG so the stroke covers it */
         }
 
         /* The expanding background circle */
@@ -291,37 +290,95 @@
             <h1 class="fg-text lock-text">LOCK IN TO PARTY</h1>
 
             <div class="svg-machine">
-                <svg width="300" height="150" viewBox="0 0 300 150" fill="var(--bg-color)" stroke="var(--sketch-color)"
-                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="450" height="180" viewBox="0 0 300 120" fill="none" stroke="var(--sketch-color)"
+                    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
 
-                    <!-- Machine Top Block (1.5x taller) -->
-                    <rect x="20" y="8" width="260" height="66" rx="6" />
-                    <!-- Left depth line (Centered vertically inside the taller block) -->
-                    <line x1="35" y1="41" x2="115" y2="41" />
-                    <!-- Right depth line -->
-                    <line x1="185" y1="41" x2="265" y2="41" />
+                    <!-- Continuous Line Art - Espresso Machine like reference -->
 
-                    <!-- Pressure Gauge (Speedometer style - shifted down to match new center) -->
-                    <path d="M 137.5 51 A 16 16 0 1 1 162.5 51" fill="none" />
-                    <!-- Gauge Needle (Red) -->
-                    <g class="gauge-needle">
-                        <polygon points="148,41 152,41 150,27" fill="var(--text-dark)" stroke="none" />
+                    <!-- Machine top block - slightly hand-drawn -->
+                    <path fill="var(--bg-color)" d="
+                        M 96 8
+                        C 90 7, 87 12, 88 19
+                        L 87 37
+                        C 87 44, 92 49, 99 48
+                        L 201 48
+                        C 208 49, 213 44, 212 37
+                        L 213 19
+                        C 213 12, 209 7, 204 8
+                        L 96 8
+                    " />
+
+                    <!-- Pressure gauge - messy hand drawn style -->
+                    <g class="pressure-gauge">
+                        <!-- Gauge circle - wobbly hand drawn -->
+                        <path d="
+                            M 135 29
+                            C 134 21, 141 13, 149 12
+                            C 158 11, 166 18, 168 27
+                            C 169 36, 161 45, 151 45
+                            C 141 46, 133 38, 135 29
+                        " fill="var(--bg-color)" />
+
+                        <!-- Gauge tick marks - sketchy -->
+                        <path d="M 140 21 Q 141 22, 143 24" stroke="var(--sketch-color)" stroke-width="1.2" />
+                        <path d="M 149 14 Q 150 16, 151 19" stroke="var(--sketch-color)" stroke-width="1.2" />
+                        <path d="M 160 21 Q 159 22, 157 24" stroke="var(--sketch-color)" stroke-width="1.2" />
+
+                        <!-- Gauge needle - red, slightly hand drawn -->
+                        <g class="gauge-needle">
+                            <path d="
+                                M 150 29
+                                C 146 28, 143 26, 140 25
+                            " stroke="var(--text-dark)" stroke-width="2" fill="none" />
+                            <!-- Needle center dot -->
+                            <circle cx="150" cy="29" r="2" fill="var(--text-dark)" stroke="none" />
+                        </g>
                     </g>
-                    <!-- Gauge Center Pin -->
-                    <circle cx="150" cy="41" r="3.5" fill="var(--sketch-color)" stroke="none" />
 
-                    <!-- Machine Upper Body (Connecting plate made taller/sturdier) -->
-                    <rect x="80" y="74" width="140" height="12" rx="3" />
-
-                    <!-- Portafilter Group (Shifted down 10px to connect to the new taller plate) -->
+                    <!-- Portafilter with handle on LEFT like reference -->
                     <g class="portafilter">
-                        <!-- Upper Rim -->
-                        <rect x="100" y="86" width="100" height="10" rx="3" />
-                        <!-- Basket (Bottomless) -->
-                        <path d="M 115 96 L 185 96 L 178 114 Q 175 121 168 121 L 132 121 Q 125 121 122 114 Z" />
-                        <!-- Handle -->
-                        <rect x="195" y="89" width="90" height="14" rx="7" />
+                        <!-- Fills first (below strokes) -->
+                        <path fill="var(--bg-color)" stroke="none" d="
+                            M 128 50
+                            C 122 49, 118 53, 119 57
+                            L 118 70
+                            C 118 75, 123 79, 130 78
+                            L 170 78
+                            C 177 79, 182 75, 181 70
+                            L 182 57
+                            C 182 53, 177 49, 172 50
+                            Z
+                        " />
+                        <path fill="var(--bg-color)" stroke="none" d="
+                            M 119 57
+                            C 106 51, 69 38, 41 31
+                            C 26 27, 11 29, 9 36
+                            C 7 43, 17 50, 36 52
+                            C 61 55, 103 64, 119 70
+                        " />
+
+                        <!-- Strokes on top -->
+                        <path fill="none" d="
+                            M 128 50
+                            C 122 49, 118 53, 119 57
+                            L 118 70
+                            C 118 75, 123 79, 130 78
+                            L 170 78
+                            C 177 79, 182 75, 181 70
+                            L 182 57
+                            C 182 53, 177 49, 172 50
+                            Z
+                        " />
+                        <path fill="none" d="
+                            M 119 57
+                            C 106 51, 69 38, 41 31
+                            C 26 27, 11 29, 9 36
+                            C 7 43, 17 50, 36 52
+                            C 61 55, 103 64, 119 70
+                        " />
                     </g>
+
+
                 </svg>
                 <div class="espresso-liquid"></div>
             </div>
@@ -373,10 +430,11 @@
         gsap.registerPlugin(ScrollTrigger);
 
         // Pre-rotate the portafilter handle
-        // svgOrigin adjusted to properly pivot from the new shifted location
-        gsap.set(".portafilter", { rotation: -50, svgOrigin: "150 91" });
-        // Set the initial left-leaning rotation for the gauge needle
-        gsap.set(".gauge-needle", { rotation: -60, svgOrigin: "150 41" });
+        // svgOrigin adjusted - pivots from center top of portafilter
+        gsap.set(".portafilter", { rotation: -35, svgOrigin: "150 60" });
+
+        // Set initial rotation for gauge needle (pointing left)
+        gsap.set(".gauge-needle", { rotation: -45, svgOrigin: "150 29" });
 
         // Take full GSAP control of the flood placement so the beige dot stays hidden
         gsap.set(".espresso-flood", { scale: 0, xPercent: -50, yPercent: -50 });
@@ -392,23 +450,23 @@
             }
         });
 
-        // 1. Lock the portafilter into place
+        // 1. Lock the portafilter into place (handle swings into position)
         tl.to(".portafilter", {
             rotation: 0,
             duration: 1.5,
             ease: "power2.inOut"
         })
-            // 2. Liquid drops AND pressure gauge needle sweeps right simultaneously
+            // 2. Coffee fills AND gauge needle moves from left to right
             .to(".espresso-liquid", {
-                height: "120vh",
+                height: "100vh",
                 duration: 2,
                 ease: "power1.in"
             })
             .to(".gauge-needle", {
-                rotation: 60, // Sweeps to the right
+                rotation: 45,
                 duration: 2,
-                ease: "power1.inOut" // Smooth fluid pressure build up
-            }, "<") // "<" triggers this at the exact same time as the previous animation
+                ease: "power1.inOut"
+            }, "<")
 
             // 3. Fade out the machine
             .to(".machine-container", {
