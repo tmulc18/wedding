@@ -344,6 +344,7 @@
     <!-- GSAP Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
 
     <script>
         // --- 1. GENERATE BACKGROUND TEXT ---
@@ -427,6 +428,70 @@
                 duration: 1.5,
                 ease: "power2.out"
             });
+
+        // --- 4. AUTO-SCROLL HELPER FOR COFFEE SECTION ---
+        // If user pauses at the coffee section, auto-scroll to guide them through
+        let hasAutoScrolled = false;
+        let pauseTimer = null;
+        const pauseThreshold = 2000; // 2 seconds of no scrolling
+
+        console.log('[AutoScroll] Initialized');
+
+        function clearPauseTimer() {
+            if (pauseTimer) {
+                console.log('[AutoScroll] Scroll detected, clearing timer');
+                clearTimeout(pauseTimer);
+                pauseTimer = null;
+            }
+        }
+
+        function startPauseTimer() {
+            if (hasAutoScrolled) return;
+
+            clearPauseTimer();
+            console.log('[AutoScroll] Starting pause timer...');
+
+            pauseTimer = setTimeout(() => {
+                if (hasAutoScrolled) return;
+                hasAutoScrolled = true;
+
+                const coffeeSection = document.querySelector('.coffee-section');
+                const sectionTop = coffeeSection.offsetTop;
+                const scrollEnd = sectionTop + (window.innerHeight * 6.5); // Extended to fully complete animation
+
+                console.log('[AutoScroll] Pause detected, triggering scroll!', { sectionTop, scrollEnd });
+
+                gsap.to(window, {
+                    scrollTo: scrollEnd,
+                    duration: 3.5,
+                    ease: "power1.inOut"
+                });
+            }, pauseThreshold);
+        }
+
+        ScrollTrigger.create({
+            trigger: ".coffee-section",
+            start: "top 80%",
+            end: "bottom top",
+            onEnter: () => {
+                console.log('[AutoScroll] Entered coffee section');
+                startPauseTimer();
+            },
+            onLeave: () => {
+                console.log('[AutoScroll] Left coffee section');
+                clearPauseTimer();
+            },
+            onLeaveBack: () => {
+                console.log('[AutoScroll] Scrolled back up out of coffee section');
+                clearPauseTimer();
+            },
+            onUpdate: () => {
+                // Any scroll activity resets the pause timer
+                if (pauseTimer && !hasAutoScrolled) {
+                    startPauseTimer();
+                }
+            }
+        });
     </script>
 
 </body>
