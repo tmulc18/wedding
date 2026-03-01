@@ -129,8 +129,8 @@
 
         .espresso-liquid {
             position: absolute;
-            top: 100px;
-            /* Aligned perfectly to the flat bottom of the basket */
+            top: 125px;
+            /* Shifted down to match the new basket position */
             left: 50%;
             transform: translateX(-50%);
             width: 6px;
@@ -282,20 +282,36 @@
             <h1 class="fg-text lock-text">LOCK IN TO PARTY</h1>
 
             <div class="svg-machine">
-                <!-- Reverted to the distinct, structural sketch design -->
                 <svg width="300" height="150" viewBox="0 0 300 150" fill="var(--bg-color)" stroke="var(--sketch-color)"
                     stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+
+                    <!-- Machine Top Block with Depth Line -->
+                    <rect x="20" y="8" width="260" height="44" rx="6" />
+                    <!-- Left depth line -->
+                    <line x1="35" y1="30" x2="115" y2="30" />
+                    <!-- Right depth line -->
+                    <line x1="185" y1="30" x2="265" y2="30" />
+
+                    <!-- Pressure Gauge (Speedometer style) -->
+                    <path d="M 137.5 40 A 16 16 0 1 1 162.5 40" fill="none" />
+                    <!-- Gauge Needle (Red) - Fixed disappearance by using a filled polygon in a group -->
+                    <g class="gauge-needle">
+                        <polygon points="148,30 152,30 150,16" fill="var(--text-dark)" stroke="none" />
+                    </g>
+                    <!-- Gauge Center Pin -->
+                    <circle cx="150" cy="30" r="3.5" fill="var(--sketch-color)" stroke="none" />
+
                     <!-- Machine Upper Body -->
-                    <rect x="80" y="25" width="140" height="40" rx="6" />
+                    <rect x="80" y="52" width="140" height="38" rx="6" />
 
                     <!-- Portafilter Group (This is what rotates) -->
                     <g class="portafilter">
                         <!-- Upper Rim -->
-                        <rect x="100" y="65" width="100" height="10" rx="3" />
+                        <rect x="100" y="90" width="100" height="10" rx="3" />
                         <!-- Basket (Bottomless) -->
-                        <path d="M 115 75 L 185 75 L 178 93 Q 175 100 168 100 L 132 100 Q 125 100 122 93 Z" />
+                        <path d="M 115 100 L 185 100 L 178 118 Q 175 125 168 125 L 132 125 Q 125 125 122 118 Z" />
                         <!-- Handle -->
-                        <rect x="195" y="68" width="90" height="14" rx="7" />
+                        <rect x="195" y="93" width="90" height="14" rx="7" />
                     </g>
                 </svg>
                 <div class="espresso-liquid"></div>
@@ -347,8 +363,11 @@
         gsap.registerPlugin(ScrollTrigger);
 
         // Pre-rotate the portafilter handle
-        // transformOrigin adjusted perfectly for the new sketch SVG proportions
-        gsap.set(".portafilter", { rotation: -50, transformOrigin: "150px 70px" });
+        // svgOrigin prevents cross-browser transformation bugs that make SVG parts disappear
+        gsap.set(".portafilter", { rotation: -50, svgOrigin: "150 95" });
+        // Set the initial left-leaning rotation for the gauge needle
+        gsap.set(".gauge-needle", { rotation: -60, svgOrigin: "150 30" });
+
         gsap.set(".agenda-content", { xPercent: -50, yPercent: -50 });
 
         const tl = gsap.timeline({
@@ -361,25 +380,36 @@
             }
         });
 
+        // 1. Lock the portafilter into place
         tl.to(".portafilter", {
             rotation: 0,
             duration: 1.5,
             ease: "power2.inOut"
         })
+            // 2. Liquid drops AND pressure gauge needle sweeps right simultaneously
             .to(".espresso-liquid", {
                 height: "120vh",
                 duration: 2,
                 ease: "power1.in"
             })
+            .to(".gauge-needle", {
+                rotation: 60, // Sweeps to the right
+                duration: 2,
+                ease: "power1.inOut" // Smooth fluid pressure build up
+            }, "<") // "<" triggers this at the exact same time as the previous animation
+
+            // 3. Fade out the machine
             .to(".machine-container", {
                 opacity: 0,
                 duration: 0.5
             }, "-=0.5")
+            // 4. Espresso flood scales up
             .to(".espresso-flood", {
                 scale: 250,
                 duration: 2.5,
                 ease: "power3.inOut"
             }, "-=0.2")
+            // 5. Fade in the agenda details
             .to(".agenda-content", {
                 opacity: 1,
                 duration: 1.5,
