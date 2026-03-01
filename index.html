@@ -250,15 +250,19 @@
             }
 
             .agenda-list li {
-                grid-template-columns: 1fr;
-                text-align: center;
-                gap: 0.25rem;
+                grid-template-columns: 1fr 1fr 1fr;
             }
 
-            .agenda-list span.event,
-            .agenda-list span.location,
-            .agenda-list span.time {
+            .agenda-list span.event {
+                text-align: left;
+            }
+
+            .agenda-list span.location {
                 text-align: center;
+            }
+
+            .agenda-list span.time {
+                text-align: right;
             }
 
             .more-details {
