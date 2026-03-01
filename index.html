@@ -127,10 +127,16 @@
             z-index: 10;
         }
 
+        .svg-machine svg {
+            position: relative;
+            z-index: 10;
+            /* Ensures the machine renders ON TOP of the liquid */
+        }
+
         .espresso-liquid {
             position: absolute;
-            top: 125px;
-            /* Shifted down to match the new basket position */
+            top: 120px;
+            /* Tucked slightly higher so it emerges from behind the basket */
             left: 50%;
             transform: translateX(-50%);
             width: 6px;
@@ -138,6 +144,7 @@
             background-color: var(--espresso-color);
             border-radius: 0 0 10px 10px;
             z-index: 9;
+            /* Lower z-index than the SVG so the stroke covers it */
         }
 
         /* The expanding background circle */
