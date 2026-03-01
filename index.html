@@ -538,10 +538,12 @@
             onLeave: () => {
                 console.log('[AutoScroll] Left coffee section');
                 clearPauseTimer();
+                hasAutoScrolled = false; // Reset so it can trigger again on re-entry
             },
             onLeaveBack: () => {
                 console.log('[AutoScroll] Scrolled back up out of coffee section');
                 clearPauseTimer();
+                hasAutoScrolled = false; // Reset so it can trigger again on re-entry
             },
             onUpdate: () => {
                 // Any scroll activity resets the pause timer
