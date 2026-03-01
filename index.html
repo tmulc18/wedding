@@ -549,9 +549,12 @@
                             ease: "power1.inOut"
                         });
                     } else {
-                        // Scroll to the next section element using GSAP's element targeting
+                        // Scroll to the next section element, centering it vertically
+                        const targetEl = document.querySelector(section.target);
+                        const targetHeight = targetEl ? targetEl.offsetHeight : 0;
+                        const centerOffset = (window.innerHeight - targetHeight) / 2;
                         gsap.to(window, {
-                            scrollTo: { y: section.target, offsetY: window.innerHeight * section.offsetY },
+                            scrollTo: { y: section.target, offsetY: centerOffset },
                             duration: section.duration,
                             ease: "power1.inOut"
                         });
