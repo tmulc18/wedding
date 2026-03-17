@@ -123,27 +123,16 @@
         .svg-machine {
             position: relative;
             width: 450px;
-            height: 180px;
+            height: 270px;
             z-index: 10;
         }
 
         .svg-machine svg {
             position: relative;
             z-index: 10;
+            width: 100%;
+            height: 100%;
             overflow: visible;
-            /* Ensures the machine renders ON TOP of the liquid */
-        }
-
-        .espresso-liquid {
-            position: absolute;
-            top: 117px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 8px;
-            height: 0px;
-            background-color: var(--espresso-color);
-            border-radius: 0 0 10px 10px;
-            z-index: 9;
         }
 
         /* The expanding background circle */
@@ -155,9 +144,7 @@
             height: 10px;
             background-color: var(--espresso-color);
             border-radius: 50%;
-            /* Removed the CSS transform so GSAP can take full control */
             opacity: 0;
-            /* Keeps the dot perfectly hidden before the animation triggers */
             z-index: 20;
             pointer-events: none;
         }
@@ -275,12 +262,7 @@
 
             .svg-machine {
                 width: 380px;
-                height: 152px;
-            }
-
-            .svg-machine svg {
-                width: 380px;
-                height: 152px;
+                height: 228px;
             }
         }
     </style>
@@ -304,10 +286,16 @@
             <h1 class="fg-text lock-text">LOCK IN TO PARTY</h1>
 
             <div class="svg-machine">
-                <svg width="450" height="180" viewBox="0 0 300 120" fill="none" stroke="var(--sketch-color)"
-                    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <!-- Extended viewBox height to fit the cup under the machine -->
+                <svg viewBox="0 0 300 180" fill="none" stroke="var(--sketch-color)" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
 
-                    <!-- Continuous Line Art - Espresso Machine like reference -->
+                    <defs>
+                        <!-- Clipping path perfectly matches the inside of the glass miniature espresso cup -->
+                        <clipPath id="cup-clip">
+                            <path d="M 135 125 C 135 145, 140 153, 150 153 C 160 153, 165 145, 165 125 Z" />
+                        </clipPath>
+                    </defs>
 
                     <!-- Machine top block - slightly hand-drawn -->
                     <path fill="var(--bg-color)" d="
@@ -392,9 +380,32 @@
                         " />
                     </g>
 
+                    <!-- The Pouring Liquid Stream (Starts hidden with 0 height) -->
+                    <rect class="svg-stream" x="148" y="78" width="4" height="0" fill="var(--espresso-color)"
+                        stroke="none" rx="2" />
+
+                    <!-- The Liquid filling inside the miniature cup -->
+                    <g clip-path="url(#cup-clip)">
+                        <!-- Starts pushed down below the cup (y=155), height 0 -->
+                        <rect class="cup-liquid-fill" x="130" y="155" width="40" height="0" fill="var(--espresso-color)"
+                            stroke="none" />
+                    </g>
+
+                    <!-- Miniature Glass Espresso Cup Strokes (Drawn ON TOP) -->
+                    <g class="glass-cup" stroke="var(--sketch-color)" stroke-width="1.8" fill="none">
+                        <!-- Cup Back Rim (lower opacity for depth) -->
+                        <path d="M 135 125 C 142 122, 158 122, 165 125" stroke-opacity="0.4" />
+                        <!-- Main Cup Body -->
+                        <path d="M 135 125 C 135 145, 140 153, 150 153 C 160 153, 165 145, 165 125" />
+                        <!-- Cup Front Rim -->
+                        <path d="M 135 125 C 142 128, 158 128, 165 125" />
+                        <!-- Miniature Glass Handle -->
+                        <path d="M 164 130 C 178 130, 178 145, 162 145" />
+                        <!-- Subtle reflection line -->
+                        <path d="M 139 130 C 139 135, 141 140, 144 145" stroke-opacity="0.3" stroke-width="1.2" />
+                    </g>
 
                 </svg>
-                <div class="espresso-liquid"></div>
             </div>
         </div>
     </section>
@@ -444,13 +455,11 @@
         gsap.registerPlugin(ScrollTrigger);
 
         // Pre-rotate the portafilter handle
-        // svgOrigin adjusted - pivots from center top of portafilter
         gsap.set(".portafilter", { rotation: -35, svgOrigin: "150 60" });
 
-        // Set initial rotation for gauge needle (pointing left)
+        // Set initial rotation for gauge needle
         gsap.set(".gauge-needle", { rotation: -45, svgOrigin: "150 29" });
 
-        // Take full GSAP control of the flood placement so the beige dot stays hidden
         gsap.set(".espresso-flood", { scale: 0, xPercent: -50, yPercent: -50 });
         gsap.set(".agenda-content", { xPercent: -50, yPercent: -50 });
 
@@ -464,58 +473,62 @@
             }
         });
 
-        // 1. Lock the portafilter into place (handle swings into position)
+        // 1. Lock the portafilter into place
         tl.to(".portafilter", {
             rotation: 0,
             duration: 1.5,
             ease: "power2.inOut"
         })
-            // 2. Coffee fills AND gauge needle moves from left to right
-            .to(".espresso-liquid", {
-                height: "100vh",
-                duration: 2,
+            // 2. Stream drops to the bottom of the miniature cup
+            .to(".svg-stream", {
+                attr: { height: 72 }, // Goes from y=78 down to 150
+                duration: 0.8,
                 ease: "power1.in"
             })
+            // 3. Cup fills upwards & gauge needle moves
+            .to(".cup-liquid-fill", {
+                attr: { y: 127, height: 28 }, // Fills by expanding height and moving y up
+                duration: 2.5,
+                ease: "power1.inOut"
+            }, "fill")
             .to(".gauge-needle", {
                 rotation: 45,
-                duration: 2,
+                duration: 2.5,
                 ease: "power1.inOut"
-            }, "<")
+            }, "fill")
 
-            // 3. Fade out the machine
+            // 4. Fade out the machine slightly before completely full
             .to(".machine-container", {
                 opacity: 0,
                 duration: 0.5
-            }, "-=0.5")
-            // 4. Espresso flood scales up
+            }, "fill+=1.5")
+
+            // 5. Espresso flood scales up perfectly as the machine fades
             .to(".espresso-flood", {
-                opacity: 1, // Becomes visible exactly as it starts to explode
+                opacity: 1,
                 scale: 250,
                 duration: 2.5,
                 ease: "power3.inOut"
-            }, "-=0.2")
-            // 5. Fade in the agenda details
+            }, "fill+=1.5")
+
+            // 6. Fade in the agenda details
             .to(".agenda-content", {
                 opacity: 1,
                 duration: 1.5,
                 ease: "power2.out"
-            });
+            }, "-=0.5");
+
 
         // --- 4. AUTO-SCROLL HELPER FOR ALL SECTIONS ---
-        // If user pauses at any section, auto-scroll to the next section
-        const pauseThreshold = 2000; // 2 seconds of no scrolling
+        const pauseThreshold = 2000;
 
-        console.log('[AutoScroll] Initialized');
-
-        // Define sections and their scroll targets (offsetY is fraction of viewport height)
         const autoScrollSections = [
             { trigger: "#section-date", target: "#section-location", duration: 1, offsetY: 0.3 },
             { trigger: "#section-location", target: "#section-save", duration: 1, offsetY: 0.3 },
             { trigger: "#section-save", target: ".coffee-section", duration: 1, offsetY: -0.1 },
-            { trigger: ".coffee-section", target: "coffee-end", duration: 3.5 } // Special case: scroll through animation
+            { trigger: ".coffee-section", target: "coffee-end", duration: 3.5 }
         ];
 
-        // Create autoscroll trigger for each section
         autoScrollSections.forEach((section, index) => {
             let hasAutoScrolled = false;
             let pauseTimer = null;
@@ -529,18 +542,13 @@
 
             function startPauseTimer() {
                 if (hasAutoScrolled) return;
-
                 clearPauseTimer();
-                console.log(`[AutoScroll] Starting pause timer for ${section.trigger}...`);
 
                 pauseTimer = setTimeout(() => {
                     if (hasAutoScrolled) return;
                     hasAutoScrolled = true;
 
-                    console.log(`[AutoScroll] Pause detected at ${section.trigger}, scrolling to ${section.target}`);
-
                     if (section.target === "coffee-end") {
-                        // Special case: scroll through entire coffee animation
                         const coffeeSection = document.querySelector('.coffee-section');
                         const coffeeTop = coffeeSection.getBoundingClientRect().top + window.scrollY;
                         gsap.to(window, {
@@ -549,7 +557,6 @@
                             ease: "power1.inOut"
                         });
                     } else {
-                        // Scroll to the next section element, centering it vertically
                         const targetEl = document.querySelector(section.target);
                         const targetHeight = targetEl ? targetEl.offsetHeight : 0;
                         const centerOffset = (window.innerHeight - targetHeight) / 2;
@@ -566,24 +573,11 @@
                 trigger: section.trigger,
                 start: "top 80%",
                 end: "bottom 20%",
-                onEnter: () => {
-                    console.log(`[AutoScroll] Entered ${section.trigger}`);
-                    startPauseTimer();
-                },
-                onLeave: () => {
-                    console.log(`[AutoScroll] Left ${section.trigger}`);
-                    clearPauseTimer();
-                    hasAutoScrolled = false;
-                },
-                onLeaveBack: () => {
-                    console.log(`[AutoScroll] Scrolled back up out of ${section.trigger}`);
-                    clearPauseTimer();
-                    hasAutoScrolled = false;
-                },
+                onEnter: startPauseTimer,
+                onLeave: () => { clearPauseTimer(); hasAutoScrolled = false; },
+                onLeaveBack: () => { clearPauseTimer(); hasAutoScrolled = false; },
                 onUpdate: () => {
-                    if (pauseTimer && !hasAutoScrolled) {
-                        startPauseTimer();
-                    }
+                    if (pauseTimer && !hasAutoScrolled) startPauseTimer();
                 }
             });
         });
