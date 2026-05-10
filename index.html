@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Save the Date - Farbeen & Tommy</title>
+    <title>Farbeen & Tommy — Sept 19, 2026</title>
     <!-- Favicon -->
     <link rel="icon" href="apple-touch-icon.png" type="image/png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,6 +31,86 @@
             background-color: var(--bg-color);
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             overflow-x: hidden;
+        }
+
+        /* The expanding espresso takeover */
+        .espresso-flood {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background-color: var(--espresso-color);
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        /* --- FIXED NAV --- */
+        .site-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 3rem;
+            background-color: var(--bg-color);
+            border-bottom: 1px solid var(--espresso-color);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .site-nav.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .site-nav-logo {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        .logo-svg {
+            width: 44px;
+            height: 44px;
+            display: block;
+            overflow: visible;
+        }
+
+        .logo-svg .logo-text {
+            font-family: 'Cedarville Cursive', cursive;
+            font-size: 75px;
+            fill: var(--text-dark);
+        }
+
+        .site-nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .site-nav-links a {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--sketch-color);
+            text-decoration: none;
+            border-bottom: 1.5px solid transparent;
+            padding-bottom: 2px;
+            transition: border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .site-nav-links a:hover {
+            color: var(--text-dark);
+            border-bottom-color: var(--text-dark);
         }
 
         /* --- BACKGROUND LAYER --- */
@@ -88,7 +168,7 @@
                 4px 4px 0 var(--bg-color);
         }
 
-        .location {
+        .fg-text.location {
             word-spacing: 2vw;
         }
 
@@ -135,64 +215,72 @@
             overflow: visible;
         }
 
-        /* The expanding background circle */
-        .espresso-flood {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 10px;
-            height: 10px;
-            background-color: var(--espresso-color);
-            border-radius: 50%;
-            opacity: 0;
-            z-index: 20;
-            pointer-events: none;
-        }
-
-        /* --- THE AGENDA --- */
-        .agenda-content {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            z-index: 30;
+        /* --- INFO SECTIONS (Events + Things to Do) ---
+           Styling mirrors the original agenda overlay: cursive section
+           titles in red, 3-column bold uppercase rows with subtle
+           border-bottom dividers. */
+        .info-section {
+            position: relative;
+            z-index: 50;
+            background-color: var(--bg-color);
+            padding: 14vh 8vw;
+            box-sizing: border-box;
             text-align: center;
-            width: 90%;
-            max-width: 1100px;
-            opacity: 0;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
         }
 
-        .agenda-title {
+        .info-header {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 6.5vw;
+            font-weight: 800;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin: 0 0 5vh 0;
+            white-space: nowrap;
+        }
+
+        /* Events */
+        .event-block {
+            margin: 0 auto 11vh auto;
+            max-width: 720px;
+        }
+
+        .event-title {
             font-family: 'Cedarville Cursive', cursive;
-            font-size: 8vw;
+            font-size: 3.2vw;
             font-weight: normal;
             color: var(--text-dark);
-            text-shadow: none;
-            margin-bottom: 2rem;
             text-transform: none;
+            letter-spacing: normal;
+            margin: 0 0 0.4rem 0;
         }
 
-        .agenda-list {
+        .event-date {
+            font-size: 1.3vw;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: var(--sketch-color);
+            opacity: 0.55;
+            text-transform: uppercase;
+            margin: 0 0 2rem 0;
+        }
+
+        .event-list {
             list-style: none;
             padding: 0;
-            font-size: 2vw;
+            margin: 0;
+            font-size: 1.4vw;
             font-weight: bold;
             line-height: 1.5;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            width: 100%;
-            max-width: 1000px;
-            margin: 0;
+            letter-spacing: 1px;
             display: flex;
             flex-direction: column;
             gap: 1rem;
         }
 
-        .agenda-list li {
+        .event-list li {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             align-items: center;
@@ -200,60 +288,129 @@
             padding-bottom: 0.5rem;
         }
 
-        .agenda-list span.event {
-            color: var(--text-dark);
-            white-space: nowrap;
-            text-align: left;
+        .event-list span.time     { color: var(--sketch-color); white-space: nowrap; text-align: left;   }
+        .event-list span.event    { color: var(--sketch-color); white-space: nowrap; text-align: center; }
+        .event-list span.location { color: var(--sketch-color); white-space: nowrap; text-align: right;  }
+
+        .event-note {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 1.1vw;
+            font-weight: 700;
+            margin: 1.25rem 0 0 0;
+            text-transform: none;
+            letter-spacing: normal;
         }
 
-        .agenda-list span.location {
-            color: #333;
-            white-space: nowrap;
-            text-align: center;
+        .event-note .dress  { color: #624014; }
+        .event-note .attire { color: #39582f; }
+
+        .event-note a {
+            color: #ff0000;
+            text-decoration: underline;
         }
 
-        .agenda-list span.time {
-            color: var(--text-dark);
-            white-space: nowrap;
-            text-align: right;
-        }
-
-        .more-details {
+        /* Things to Do */
+        .things-sub {
             font-family: 'Cedarville Cursive', cursive;
-            margin-top: 2rem;
             font-size: 2vw;
-            font-style: normal;
+            color: var(--sketch-color);
             opacity: 0.7;
+            margin: -2vh 0 6vh 0;
+        }
+
+        .things-block {
+            margin: 0 auto 6vh auto;
+            max-width: 720px;
+        }
+
+        .things-title {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 3vw;
+            font-weight: 800;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            margin: 0 0 1.5rem 0;
+        }
+
+        .things-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 1.4vw;
+            font-weight: bold;
+            line-height: 1.5;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            color: var(--sketch-color);
+        }
+
+        .things-list li {
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+            padding-bottom: 0.5rem;
         }
 
         /* Mobile Adjustments */
         @media (max-width: 768px) {
-            .agenda-title {
-                font-size: 12vw;
+            .site-nav {
+                padding: 0.9rem 1.25rem;
             }
 
-            .agenda-list {
+            .logo-svg {
+                width: 34px;
+                height: 34px;
+            }
+
+            .site-nav-links {
+                gap: 1.25rem;
+            }
+
+            .site-nav-links a {
+                font-size: 0.8rem;
+                letter-spacing: 0.1em;
+            }
+
+            .info-section {
+                padding: 10vh 6vw;
+            }
+
+            .info-header {
+                font-size: 11vw;
+                margin-bottom: 4vh;
+            }
+
+            .event-title {
+                font-size: 7vw;
+            }
+
+            .event-date {
+                font-size: 3vw;
+            }
+
+            .event-list {
+                font-size: 3.2vw;
+                letter-spacing: 1px;
+            }
+
+            .event-note {
+                font-size: 3vw;
+            }
+
+            .things-sub {
+                font-size: 4.5vw;
+            }
+
+            .things-title {
+                font-size: 6vw;
+            }
+
+            .things-list {
                 font-size: 3.5vw;
-            }
-
-            .agenda-list li {
-                grid-template-columns: 1fr 1fr 1fr;
-            }
-
-            .agenda-list span.event {
-                text-align: left;
-            }
-
-            .agenda-list span.location {
-                text-align: center;
-            }
-
-            .agenda-list span.time {
-                text-align: right;
-            }
-
-            .more-details {
-                font-size: 4vw;
+                letter-spacing: 1px;
             }
 
             .lock-text {
@@ -264,11 +421,28 @@
                 width: 380px;
                 height: 228px;
             }
+
         }
     </style>
 </head>
 
 <body>
+
+    <!-- Fixed nav, fades in once the user reaches the events section -->
+    <nav class="site-nav" id="site-nav" aria-label="Primary">
+        <a href="#" class="site-nav-logo" aria-label="Back to top">
+            <svg class="logo-svg" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g transform="translate(5, 5)">
+                    <text x="50" y="70" text-anchor="middle" class="logo-text">ft</text>
+                    <path d="M 85,15 Q 85,30 70,30 Q 85,30 85,45 Q 85,30 100,30 Q 85,30 85,15 Z M 73,10 Q 73,17 66,17 Q 73,17 73,24 Q 73,17 80,17 Q 73,17 73,10 Z" fill="var(--text-dark)"/>
+                </g>
+            </svg>
+        </a>
+        <div class="site-nav-links">
+            <a href="#events-section">Events</a>
+            <a href="#things-section">Things to Do</a>
+        </div>
+    </nav>
 
     <!-- 1. Background Parallax Layer -->
     <div class="bg-layer" id="parallax-bg"></div>
@@ -277,7 +451,6 @@
     <div class="content-layer">
         <h1 class="fg-text" id="section-date">SEPT 19 2026</h1>
         <h1 class="fg-text location" id="section-location">SAN FRANCISCO</h1>
-        <h1 class="fg-text" id="section-save">SAVE THE DATE</h1>
     </div>
 
     <!-- 3. The GSAP Coffee Rave Section -->
@@ -410,19 +583,113 @@
         </div>
     </section>
 
-    <!-- Fixed overlay elements -->
+    <!-- Espresso takeover that fills the screen at the end of the lock-in animation -->
     <div class="espresso-flood"></div>
-    <div class="agenda-content">
-        <h2 class="agenda-title">details</h2>
-        <ul class="agenda-list">
-            <li><span class="event">Dinner</span> <span class="location">Ernest</span> <span class="time">6:30
-                    PM</span>
-            </li>
-            <li><span class="event">Party</span> <span class="location">Hedge<span
-                        style="margin-left: 0.5em;">Coffee</span></span> <span class="time">10:30 PM</span></li>
-        </ul>
-        <p class="more-details">more to come ...</p>
-    </div>
+
+    <!-- ==========================================
+         EVENTS SECTION
+         ========================================== -->
+    <section id="events-section" class="info-section">
+        <h2 class="info-header">EVENTS</h2>
+
+        <div class="event-block">
+            <h3 class="event-title">welcome</h3>
+            <p class="event-date">FRIDAY, SEPT 18TH</p>
+            <ul class="event-list">
+                <li><span class="time">12 PM</span><span class="event">Run</span><span class="location">Crissy Field</span></li>
+                <li><span class="time">1 PM</span><span class="event">Brunch</span><span class="location">Location TBD</span></li>
+            </ul>
+        </div>
+
+        <div class="event-block">
+            <h3 class="event-title">reception</h3>
+            <p class="event-date">SATURDAY, SEPT 19TH</p>
+            <ul class="event-list">
+                <li><span class="time">6 PM</span><span class="event">Cocktails + Dinner</span><span class="location">Ernest</span></li>
+            </ul>
+            <p class="event-note"><span class="dress">dress cocktail.</span> <span class="attire">wear earthones.</span> <a href="https://www.pinterest.com/farbeens/919-mood/" target="_blank" rel="noopener">inspo here</a></p>
+        </div>
+
+        <div class="event-block">
+            <h3 class="event-title">party</h3>
+            <p class="event-date">SATURDAY, SEPT 19TH</p>
+            <ul class="event-list">
+                <li><span class="time">10:30 PM</span><span class="event">Dancing</span><span class="location">Hedge Coffee</span></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         THINGS TO DO SECTION
+         ========================================== -->
+    <section id="things-section" class="info-section">
+        <h2 class="info-header">SF'S GREATEST HITS</h2>
+        <p class="things-sub">some of our favs for those wondering</p>
+
+        <div class="things-block">
+            <h3 class="things-title">ACTIVITIES</h3>
+            <ul class="things-list">
+                <li>Soak in the sun at Golden Gate Park or Dolores Park</li>
+                <li>Hike Land's End for the views</li>
+                <li>Bike through the Presidio, across Golden Gate Bridge, up Hawk Hill</li>
+                <li>Shop in Pac Heights</li>
+                <li>Farmer's markets (Fort Mason, Clement St., Ferry Building)</li>
+                <li>Grab a coffee and explore the neighborhood</li>
+                <li>Venture out of the city if you have time (Mt. Tam, Stinson Beach, Sonoma, Napa, Santa Cruz)</li>
+            </ul>
+        </div>
+
+        <div class="things-block">
+            <h3 class="things-title">EATS</h3>
+            <ul class="things-list">
+                <li>Bone's Bagels (sourdough bagels)</li>
+                <li>La Taqueria (the best mission burritos)</li>
+                <li>Souvla (go-to for lunch)</li>
+                <li>Beit Rima (Arabic)</li>
+                <li>Camino Alto (Cal-American)</li>
+                <li>La Ciccia (Sardinian)</li>
+                <li>Pasta Supply Co. (fun pasta)</li>
+                <li>Chez Maman (French)</li>
+                <li>Mandalay (Burmese)</li>
+                <li>Sasa (sushi)</li>
+                <li>The Progress (Cal-American)</li>
+                <li>State Bird Provisions (dim sum style American)</li>
+                <li>Rintaro (izakaya)</li>
+                <li>Jules (sourdough pizza)</li>
+                <li>Verjus (French with standout wine and dessert)</li>
+                <li>Salt &amp; Straw (icecream)</li>
+            </ul>
+        </div>
+
+        <div class="things-block">
+            <h3 class="things-title">COFFEE &amp; MATCHA</h3>
+            <ul class="things-list">
+                <li>Hi NRG</li>
+                <li>The Richfield</li>
+                <li>The Coffee Movement</li>
+                <li>Saint Frank Coffee</li>
+                <li>Wrecking Ball Coffee Roasters</li>
+                <li>Compton's Coffee House</li>
+                <li>Linea Caffe</li>
+                <li>Tadaima</li>
+                <li>Hedge Coffee (ofc)</li>
+            </ul>
+        </div>
+
+        <div class="things-block">
+            <h3 class="things-title">BARS</h3>
+            <ul class="things-list">
+                <li>True Laurel</li>
+                <li>Bar Part Time (our first date spot)</li>
+                <li>Bus Stop (where Tommy relives his youth)</li>
+                <li>Bar Gemini</li>
+                <li>Buddy</li>
+                <li>Bar Iris</li>
+                <li>Union Larder</li>
+                <li>Bar Bibi</li>
+            </ul>
+        </div>
+    </section>
 
     <!-- GSAP Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -453,7 +720,7 @@
         });
 
         // --- 3. GSAP COFFEE RAVE ANIMATION ---
-        gsap.registerPlugin(ScrollTrigger);
+        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
         // Pre-rotate the portafilter handle
         gsap.set(".portafilter", { rotation: -35, svgOrigin: "150 60" });
@@ -462,13 +729,12 @@
         gsap.set(".gauge-needle", { rotation: -45, svgOrigin: "150 29" });
 
         gsap.set(".espresso-flood", { scale: 0, xPercent: -50, yPercent: -50 });
-        gsap.set(".agenda-content", { xPercent: -50, yPercent: -50 });
 
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".coffee-section",
                 start: "top top",
-                end: "+=350%",
+                end: "+=280%",
                 scrub: 1,
                 pin: true,
             }
@@ -488,7 +754,7 @@
             })
             // 3. Cup fills upwards & gauge needle moves
             .to(".cup-liquid-fill", {
-                attr: { y: 127, height: 28 }, // Fills by expanding height and moving y up
+                attr: { y: 127, height: 28 },
                 duration: 2.5,
                 ease: "power1.inOut"
             }, "fill")
@@ -504,20 +770,13 @@
                 duration: 0.5
             }, "fill+=1.5")
 
-            // 5. Espresso flood scales up perfectly as the machine fades
+            // 5. Espresso flood scales up as the machine fades — full-screen takeover
             .to(".espresso-flood", {
                 opacity: 1,
                 scale: 250,
                 duration: 2.5,
                 ease: "power3.inOut"
-            }, "fill+=1.5")
-
-            // 6. Fade in the agenda details
-            .to(".agenda-content", {
-                opacity: 1,
-                duration: 1.5,
-                ease: "power2.out"
-            }, "-=0.5");
+            }, "fill+=1.5");
 
 
         // --- 4. AUTO-SCROLL HELPER FOR ALL SECTIONS ---
@@ -525,12 +784,11 @@
 
         const autoScrollSections = [
             { trigger: "#section-date", target: "#section-location", duration: 1, offsetY: 0.3 },
-            { trigger: "#section-location", target: "#section-save", duration: 1, offsetY: 0.3 },
-            { trigger: "#section-save", target: ".coffee-section", duration: 1, offsetY: -0.1 },
-            { trigger: ".coffee-section", target: "coffee-end", duration: 3.5 }
+            { trigger: "#section-location", target: ".coffee-section", duration: 1, offsetY: -0.1 },
+            { trigger: ".coffee-section", target: "#events-section", duration: 2 }
         ];
 
-        autoScrollSections.forEach((section, index) => {
+        autoScrollSections.forEach((section, _index) => {
             let hasAutoScrolled = false;
             let pauseTimer = null;
 
@@ -549,24 +807,14 @@
                     if (hasAutoScrolled) return;
                     hasAutoScrolled = true;
 
-                    if (section.target === "coffee-end") {
-                        const coffeeSection = document.querySelector('.coffee-section');
-                        const coffeeTop = coffeeSection.getBoundingClientRect().top + window.scrollY;
-                        gsap.to(window, {
-                            scrollTo: coffeeTop + (window.innerHeight * 6.5),
-                            duration: section.duration,
-                            ease: "power1.inOut"
-                        });
-                    } else {
-                        const targetEl = document.querySelector(section.target);
-                        const targetHeight = targetEl ? targetEl.offsetHeight : 0;
-                        const centerOffset = (window.innerHeight - targetHeight) / 2;
-                        gsap.to(window, {
-                            scrollTo: { y: section.target, offsetY: centerOffset },
-                            duration: section.duration,
-                            ease: "power1.inOut"
-                        });
-                    }
+                    const targetEl = document.querySelector(section.target);
+                    const targetHeight = targetEl ? targetEl.offsetHeight : 0;
+                    const centerOffset = (window.innerHeight - targetHeight) / 2;
+                    gsap.to(window, {
+                        scrollTo: { y: section.target, offsetY: centerOffset },
+                        duration: section.duration,
+                        ease: "power1.inOut"
+                    });
                 }, pauseThreshold);
             }
 
@@ -582,6 +830,27 @@
                 }
             });
         });
+        // --- Transparent nav: reveal once Events comes into view ---
+        const siteNav = document.getElementById('site-nav');
+        ScrollTrigger.create({
+            trigger: '#events-section',
+            start: 'top 90%',
+            onEnter:     () => siteNav.classList.add('visible'),
+            onLeaveBack: () => siteNav.classList.remove('visible')
+        });
+
+        document.querySelectorAll('.site-nav a').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const href = a.getAttribute('href');
+                gsap.to(window, {
+                    scrollTo: (!href || href === '#') ? 0 : href,
+                    duration: 0.9,
+                    ease: 'power2.inOut'
+                });
+            });
+        });
+
     </script>
 
 </body>
