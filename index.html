@@ -364,6 +364,36 @@
             color: var(--text-dark);
         }
 
+        /* Registry */
+        .registry-text {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 1.4vw;
+            font-weight: 700;
+            line-height: 1.6;
+            color: var(--sketch-color);
+            max-width: 720px;
+            margin: 0 auto 3.5vh auto;
+        }
+
+        .registry-cta {
+            display: inline-block;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 1.4vw;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 0.7em 1.6em;
+            border: 2px solid var(--text-dark);
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+
+        .registry-cta:hover {
+            background-color: var(--text-dark);
+            color: var(--bg-color);
+        }
+
         /* Mobile Adjustments */
         @media (max-width: 768px) {
             .site-nav {
@@ -425,6 +455,14 @@
                 letter-spacing: 1px;
             }
 
+            .registry-text {
+                font-size: 3.5vw;
+            }
+
+            .registry-cta {
+                font-size: 3.5vw;
+            }
+
             .lock-text {
                 font-size: 11vw;
             }
@@ -453,6 +491,7 @@
         <div class="site-nav-links">
             <a href="#events-section">Events</a>
             <a href="#things-section">Things to Do</a>
+            <a href="#registry-section">Registry</a>
         </div>
     </nav>
 
@@ -704,6 +743,15 @@
                 <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Bar+Bibi+San+Francisco" target="_blank" rel="noopener">Bar Bibi</a></li>
             </ul>
         </div>
+    </section>
+
+    <!-- ==========================================
+         REGISTRY SECTION
+         ========================================== -->
+    <section id="registry-section" class="info-section">
+        <h2 class="info-header">REGISTRY</h2>
+        <p class="registry-text">Your presence is the greatest gift. For those who have asked, we've set up a honeyfund to help kick off our next chapter together.</p>
+        <a class="registry-cta" href="https://www.honeyfund.com/site/farbeentommy" target="_blank" rel="noopener">view registry</a>
     </section>
 
     <!-- GSAP Libraries -->
