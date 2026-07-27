@@ -173,11 +173,13 @@
         }
 
         /* --- NEW: COFFEE RAVE SECTION --- */
+        /* Sits above .espresso-flood (20) so the photo can ride on top of the
+           wash once it floods, but under the info sections (50) and nav (100) */
         .coffee-section {
             position: relative;
             height: 100vh;
             width: 100vw;
-            z-index: 3;
+            z-index: 30;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -213,6 +215,44 @@
             width: 100%;
             height: 100%;
             overflow: visible;
+        }
+
+        /* Portrait revealed on top of the espresso flood. Portrait screens fill
+           the frame (see the landscape override below for why they're the only
+           ones that do). Phones taller than 2:3 crop only at the sides, so the
+           Y bias is a no-op there; it earns its keep between 2:3 and square —
+           a narrow tablet window — where filling the width does overflow
+           vertically and a centered crop would land below his eyeline. 14%
+           pulls that window up to hold both faces, verified by cropping the
+           source to the computed visible rect. Sizing off .coffee-section
+           rather than 100vh keeps it honest under a collapsing mobile URL bar
+           and while GSAP has the section pinned. Starts hidden in CSS, not via
+           gsap.set, so it can't flash before GSAP loads. */
+        .transition-photo {
+            position: absolute;
+            inset: 0;
+            z-index: 12;
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 14%;
+            opacity: 0;
+            /* Full-bleed and on top, so it would otherwise hit-test over the
+               whole pinned section for the entire scroll while invisible */
+            pointer-events: none;
+        }
+
+        /* Landscape screens are where cover has to zoom hardest — filling a
+           1827-wide viewport with a 1067-wide portrait blows it up to face-only.
+           Show the whole frame instead and let the espresso wash fill the sides;
+           the crop bias above goes unused here because contain leaves no
+           vertical overflow to bias. Phones keep the full-bleed crop, which
+           only trims the sides. */
+        @media (min-aspect-ratio: 1/1) {
+            .transition-photo {
+                object-fit: contain;
+            }
         }
 
         /* --- INFO SECTIONS (Events + Things to Do) ---
@@ -632,6 +672,9 @@
                 </svg>
             </div>
         </div>
+
+        <!-- Fades up once the espresso flood has taken the screen -->
+        <img class="transition-photo" src="/couple-portrait.jpg" alt="Farbeen and Tommy" width="1067" height="1600">
     </section>
 
     <!-- Espresso takeover that fills the screen at the end of the lock-in animation -->
@@ -797,7 +840,10 @@
             scrollTrigger: {
                 trigger: ".coffee-section",
                 start: "top top",
-                end: "+=280%",
+                // Scrub maps the whole timeline onto this distance, so the two
+                // new beats are paid for here — otherwise adding the photo would
+                // silently speed the machine animation up by ~15%.
+                end: "+=320%",
                 scrub: 1,
                 pin: true,
             }
@@ -839,7 +885,21 @@
                 scale: 250,
                 duration: 2.5,
                 ease: "power3.inOut"
-            }, "fill+=1.5");
+            }, "fill+=1.5")
+
+            // 6. Once the wash owns the whole screen, the photo fades up on it.
+            //    Held until fill+=3.3 on purpose: power3.inOut leaves the circle
+            //    narrower than the viewport diagonal until roughly then, and on
+            //    desktop the photo is letterboxed — fading it up early would
+            //    show page cream beside it instead of the espresso wash.
+            .to(".transition-photo", {
+                opacity: 1,
+                duration: 0.8,
+                ease: "power1.out"
+            }, "fill+=3.3")
+
+            // 7. Hold on the photo before the pin releases into Events
+            .to({}, { duration: 0.8 });
 
 
         // --- 4. AUTO-SCROLL HELPER FOR ALL SECTIONS ---
