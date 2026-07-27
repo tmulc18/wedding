@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSVP confirmed — Farbeen &amp; Tommy</title>
+    <link rel="icon" href="apple-touch-icon.png" type="image/png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cedarville+Cursive&display=swap');
+
+        :root {
+            --bg-color: #f0ece3;
+            --text-dark: #D20A2E;
+            --outline-color: #bebaa9;
+            --espresso-color: #d4c4b0;
+            --sketch-color: #1a1a1a;
+            --muted: #6b5e54;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: var(--sketch-color);
+            min-height: 100vh;
+        }
+
+        .page {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 3.5rem 1.5rem 6rem;
+        }
+
+        .home-link {
+            display: inline-block;
+            margin-bottom: 2.5rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-family: 'Cedarville Cursive', cursive;
+            font-size: 1.5rem;
+        }
+        .home-link:hover { opacity: 0.75; }
+
+        h1 {
+            font-size: clamp(2.75rem, 8vw, 5rem);
+            font-weight: 800;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin: 0 0 1rem;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--sketch-color);
+            opacity: 0.55;
+            margin: 0 0 2.5rem;
+        }
+
+        .message {
+            font-size: 1.05rem;
+            font-weight: 700;
+            line-height: 1.6;
+            margin: 0 0 2.5rem;
+        }
+
+        .cal-section {
+            border-top: 1px solid var(--outline-color);
+            padding-top: 2rem;
+        }
+
+        .cal-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--muted);
+            margin-bottom: 1rem;
+        }
+
+        .cal-row {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .cal-btn {
+            flex: 1 1 240px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            text-align: center;
+            text-decoration: none;
+            padding: 0.85rem 1.5rem;
+            background: var(--text-dark);
+            color: var(--bg-color);
+            border: 2px solid var(--text-dark);
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+
+        .cal-btn:hover {
+            background-color: transparent;
+            color: var(--text-dark);
+        }
+
+        .cal-btn.ghost {
+            background: transparent;
+            color: var(--text-dark);
+        }
+        .cal-btn.ghost:hover {
+            background-color: var(--text-dark);
+            color: var(--bg-color);
+        }
+
+        .venue-list { margin: 0 0 2rem; }
+
+        .venue {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            text-decoration: none;
+            margin: 0 0 0.9rem;
+            line-height: 1.7;
+            transition: opacity 0.15s;
+        }
+        .venue:last-child { margin-bottom: 0; }
+        a.venue:hover { opacity: 0.7; }
+        .venue strong { color: var(--sketch-color); }
+
+        .details-section {
+            border-top: 1px solid var(--outline-color);
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+        }
+
+        .details-row {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .details-btn {
+            flex: 1 1 140px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            text-align: center;
+            text-decoration: none;
+            padding: 0.85rem 1rem;
+            color: var(--text-dark);
+            border: 1.5px solid var(--outline-color);
+            transition: border-color 0.15s, background-color 0.15s;
+        }
+
+        .details-btn:hover {
+            border-color: var(--text-dark);
+            background-color: rgba(210, 10, 46, 0.06);
+        }
+
+        .edit-link {
+            margin-top: 3.5rem;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        .edit-link a {
+            color: var(--muted);
+            text-decoration: underline;
+            text-decoration-color: var(--outline-color);
+            text-underline-offset: 0.3em;
+            transition: color 0.15s;
+        }
+        .edit-link a:hover { color: var(--text-dark); }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <a class="home-link" href="/">&larr; back</a>
+
+        <h1 id="headline">LOCKED IN</h1>
+        <p class="subtitle">SEPT 18 &ndash; 19, 2026 &middot; SAN FRANCISCO</p>
+
+        <p class="message" id="attending-msg">Thank you! Can't wait to see you there.</p>
+        <p class="message hidden" id="not-attending-msg">Got it — thanks for letting us know.</p>
+
+        <section class="cal-section hidden" id="cal-section">
+            <span class="cal-label">The weekend</span>
+            <div class="venue-list">
+                <p class="venue">
+                    <strong>Fri, Sept 18 &middot; 12 PM</strong><br>Drinks + Bites &mdash; location TBD
+                </p>
+                <a class="venue"
+                   href="https://www.google.com/maps/search/?api=1&amp;query=Ernest+restaurant+San+Francisco"
+                   target="_blank" rel="noopener">
+                    <strong>Sat, Sept 19 &middot; 6 PM</strong><br>Reception at Ernest
+                </a>
+            </div>
+
+            <!-- Only the reception gets a calendar entry — Friday's location is
+                 still TBD, so an invite for it would just be wrong. -->
+            <span class="cal-label">Add the reception to your calendar</span>
+            <div class="cal-row">
+                <a class="cal-btn" href="wedding.ics" download="farbeen-tommy-wedding.ics">Apple Calendar / Outlook</a>
+                <a class="cal-btn ghost"
+                   href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Farbeen+%26+Tommy%27s+Wedding&dates=20260919T180000/20260920T000000&ctz=America/Los_Angeles&location=Ernest%2C+San+Francisco%2C+CA&details=Details+at+https%3A%2F%2Fsep19.party"
+                   target="_blank" rel="noopener">Google Calendar</a>
+            </div>
+        </section>
+
+        <section class="details-section">
+            <span class="cal-label">All the details</span>
+            <div class="details-row">
+                <a class="details-btn" href="/#events-section">Events</a>
+                <a class="details-btn" href="/#things-section">Things to Do</a>
+                <a class="details-btn" href="/#registry-section">Registry</a>
+            </div>
+        </section>
+
+        <p class="edit-link"><a href="/rsvp/">Made a mistake? Update your RSVP.</a></p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script>
+        const attending = new URLSearchParams(window.location.search).get('attending');
+        if (attending === 'no') {
+            document.getElementById('headline').textContent = 'NEXT TIME';
+            document.getElementById('attending-msg').classList.add('hidden');
+            document.getElementById('not-attending-msg').classList.remove('hidden');
+        } else {
+            document.getElementById('cal-section').classList.remove('hidden');
+            // Subtle red/cream confetti burst on arrival.
+            window.addEventListener('load', () => {
+                if (typeof confetti === 'function') {
+                    confetti({
+                        particleCount: 50,
+                        spread: 65,
+                        origin: { y: 0.4 },
+                        colors: ['#D20A2E', '#bebaa9', '#d4c4b0'],
+                        scalar: 0.9,
+                        ticks: 220,
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

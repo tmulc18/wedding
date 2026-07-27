@@ -415,7 +415,8 @@
             margin: 0 auto 3.5vh auto;
         }
 
-        .registry-cta {
+        /* Shared outline button — registry + RSVP */
+        .section-cta {
             display: inline-block;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             font-size: 1.4vw;
@@ -429,9 +430,22 @@
             transition: background-color 0.15s ease, color 0.15s ease;
         }
 
-        .registry-cta:hover {
+        .section-cta:hover {
             background-color: var(--text-dark);
             color: var(--bg-color);
+        }
+
+        /* RSVP call to action, closing out the events list */
+        .rsvp-cta-block {
+            margin-top: 2vh;
+        }
+
+        .rsvp-cta-note {
+            font-family: 'Cedarville Cursive', cursive;
+            font-size: 2vw;
+            color: var(--sketch-color);
+            opacity: 0.7;
+            margin: 0 0 2.5vh 0;
         }
 
         /* Mobile Adjustments */
@@ -499,8 +513,12 @@
                 font-size: 3.5vw;
             }
 
-            .registry-cta {
+            .section-cta {
                 font-size: 3.5vw;
+            }
+
+            .rsvp-cta-note {
+                font-size: 4.5vw;
             }
 
             .lock-text {
@@ -532,6 +550,7 @@
             <a href="#events-section">Events</a>
             <a href="#things-section">Things to Do</a>
             <a href="#registry-section">Registry</a>
+            <a href="/rsvp/">RSVP</a>
         </div>
     </nav>
 
@@ -691,8 +710,9 @@
             <p class="event-date">FRIDAY, SEPT 18TH</p>
             <ul class="event-list">
                 <li><span class="time">10:30 AM</span><span class="event">Run/Walk</span><span class="location">Crissy Field</span></li>
-                <li><span class="time">12 PM</span><span class="event">Lunch</span><span class="location">Location TBD</span></li>
+                <li><span class="time">12 PM</span><span class="event">Drinks + Bites</span><span class="location">Location TBD</span></li>
             </ul>
+            <p class="event-note">run optional &mdash; come for the drinks either way.</p>
         </div>
 
         <div class="event-block">
@@ -710,6 +730,11 @@
             <ul class="event-list">
                 <li><span class="time">10:30 PM</span><span class="event">Dancing</span><span class="location">Hedge Coffee</span></li>
             </ul>
+        </div>
+
+        <div class="rsvp-cta-block">
+            <p class="rsvp-cta-note">let us know you're coming</p>
+            <a class="section-cta" href="/rsvp/">rsvp</a>
         </div>
     </section>
 
@@ -794,7 +819,7 @@
     <section id="registry-section" class="info-section">
         <h2 class="info-header">REGISTRY</h2>
         <p class="registry-text">Your presence is the greatest gift. For those who have asked, we've set up a honeyfund to help kick off our next chapter together.</p>
-        <a class="registry-cta" href="https://www.honeyfund.com/site/farbeentommy" target="_blank" rel="noopener">view registry</a>
+        <a class="section-cta" href="https://www.honeyfund.com/site/farbeentommy" target="_blank" rel="noopener">view registry</a>
     </section>
 
     <!-- GSAP Libraries -->
@@ -964,8 +989,10 @@
 
         document.querySelectorAll('.site-nav a').forEach(a => {
             a.addEventListener('click', e => {
-                e.preventDefault();
                 const href = a.getAttribute('href');
+                // Only intercept in-page anchors — real links (RSVP) navigate normally.
+                if (href && href !== '#' && !href.startsWith('#')) return;
+                e.preventDefault();
                 gsap.to(window, {
                     scrollTo: (!href || href === '#') ? 0 : href,
                     duration: 0.9,
