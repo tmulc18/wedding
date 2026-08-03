@@ -331,6 +331,11 @@
         .event-list span.time     { color: var(--sketch-color); white-space: nowrap; text-align: left;   }
         .event-list span.event    { color: var(--sketch-color); white-space: nowrap; text-align: center; }
         .event-list span.location { color: var(--sketch-color); white-space: nowrap; text-align: right;  }
+        /* Linked venues sit in the same column as plain-text ones — keep them the
+           same colour (never the browser's blue/purple) and let a light underline
+           carry the affordance. */
+        .event-list span.location a,
+        .event-list span.location a:visited { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.25em; }
 
         .event-note {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -710,7 +715,8 @@
             <p class="event-date">FRIDAY, SEPT 18TH</p>
             <ul class="event-list">
                 <li><span class="time">10:30 AM</span><span class="event">Run/Walk</span><span class="location">Crissy Field</span></li>
-                <li><span class="time">12 PM</span><span class="event">Drinks + Bites</span><span class="location">Location TBD</span></li>
+                <li><span class="time">12 PM</span><span class="event">Post-Run Drinks + Bites</span><span class="location"><a href="https://www.google.com/maps/search/?api=1&amp;query=Radhaus+Fort+Mason+San+Francisco" target="_blank" rel="noopener">Radhaus</a></span></li>
+                <li><span class="time">7&ndash;10 PM</span><span class="event">Welcome Drinks</span><span class="location">Location TBD</span></li>
             </ul>
             <p class="event-note">run optional &mdash; come for the drinks either way.</p>
         </div>

@@ -19,12 +19,13 @@ create table if not exists phone_aliases (
 );
 create index if not exists phone_aliases_primary_idx on phone_aliases(primary_phone);
 
--- One row per guest, holding a yes/no for each of the two events.
+-- One row per guest, holding a yes/no for each of the three events.
 create table if not exists rsvps (
   id                uuid primary key default gen_random_uuid(),
   phone             text        not null references guest_list(phone) on delete cascade,
   guest_name        text        not null,
-  attending_friday  boolean     not null, -- Fri Sept 18, drinks + bites
+  attending_friday  boolean     not null, -- Fri Sept 18 midday, post-run drinks + bites
+  attending_welcome boolean     not null, -- Fri Sept 18 evening, welcome party drinks
   attending         boolean     not null, -- Sat Sept 19, reception (the headline count)
   dietary           text,                 -- free-text restrictions/allergies; null when none given
   created_at        timestamptz not null default now(),
@@ -34,8 +35,9 @@ create table if not exists rsvps (
 
 -- For tables created before these columns existed. The default only backfills
 -- existing rows; every new row gets an explicit value from submit_rsvp.
-alter table rsvps add column if not exists dietary          text;
-alter table rsvps add column if not exists attending_friday boolean not null default false;
+alter table rsvps add column if not exists dietary           text;
+alter table rsvps add column if not exists attending_friday  boolean not null default false;
+alter table rsvps add column if not exists attending_welcome boolean not null default false;
 
 -- RLS: deny everything by default. Only the security-definer RPCs touch data.
 alter table guest_list    enable row level security;
@@ -83,12 +85,12 @@ grant  execute on function lookup_guest(text) to anon, authenticated;
 drop function if exists lookup_rsvp(text);
 
 create or replace function lookup_rsvp(p_phone text)
-returns table(guest_name text, attending boolean, attending_friday boolean, dietary text)
+returns table(guest_name text, attending boolean, attending_friday boolean, attending_welcome boolean, dietary text)
 language sql
 security definer
 set search_path = public
 as $$
-  select rs.guest_name, rs.attending, rs.attending_friday, rs.dietary
+  select rs.guest_name, rs.attending, rs.attending_friday, rs.attending_welcome, rs.dietary
   from rsvps rs
   where rs.phone = resolve_phone(p_phone)
   order by rs.created_at;
@@ -99,7 +101,8 @@ grant  execute on function lookup_rsvp(text) to anon, authenticated;
 
 -- RPC: submit --------------------------------------------------------
 -- p_responses: jsonb array of
---   {name: text, attending: bool, attending_friday: bool, dietary: text?}
+--   {name: text, attending: bool, attending_friday: bool,
+--    attending_welcome: bool, dietary: text?}
 -- Replaces all prior responses for this phone atomically.
 create or replace function submit_rsvp(p_phone text, p_responses jsonb)
 returns void
@@ -142,19 +145,21 @@ begin
     if v_name is null or v_name = '' then
       raise exception 'each response needs a non-empty name';
     end if;
-    insert into rsvps(phone, guest_name, attending, attending_friday, dietary)
+    insert into rsvps(phone, guest_name, attending, attending_friday, attending_welcome, dietary)
     values (
       v_phone,
       v_name,
       (r->>'attending')::boolean,
       coalesce((r->>'attending_friday')::boolean, false),
+      coalesce((r->>'attending_welcome')::boolean, false),
       nullif(trim(coalesce(r->>'dietary', '')), '')
     )
     on conflict (phone, guest_name) do update
-      set attending         = excluded.attending,
-          attending_friday  = excluded.attending_friday,
-          dietary           = excluded.dietary,
-          updated_at        = now();
+      set attending          = excluded.attending,
+          attending_friday   = excluded.attending_friday,
+          attending_welcome  = excluded.attending_welcome,
+          dietary            = excluded.dietary,
+          updated_at         = now();
   end loop;
 end;
 $$;

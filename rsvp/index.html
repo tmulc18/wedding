@@ -266,8 +266,13 @@
                 <h1>RSVP</h1>
                 <p class="subtitle">SEPT 18 &ndash; 19, 2026 &middot; SAN FRANCISCO</p>
                 <div class="venue-list">
+                    <a class="venue"
+                       href="https://www.google.com/maps/search/?api=1&amp;query=Radhaus+Fort+Mason+San+Francisco"
+                       target="_blank" rel="noopener">
+                        <strong>Fri &middot; 12 PM</strong><br>Post-Run Drinks + Bites &mdash; Radhaus
+                    </a>
                     <p class="venue">
-                        <strong>Fri &middot; 12 PM</strong><br>Drinks + Bites &mdash; location TBD
+                        <strong>Fri &middot; 7&ndash;10 PM</strong><br>Welcome Drinks &mdash; location TBD
                     </p>
                     <a class="venue"
                        href="https://www.google.com/maps/search/?api=1&amp;query=Ernest+restaurant+San+Francisco"
@@ -315,8 +320,8 @@
         // Fill these in once the project exists. The anon/publishable key is public
         // by design — RLS denies everything and the security-definer RPCs do the work.
         // While they're blank the form stays up but tells guests RSVPs aren't open yet.
-        const SUPABASE_URL = '';
-        const SUPABASE_ANON_KEY = '';
+        const SUPABASE_URL = 'https://zgshwwbeasykxeztynlx.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_wEwU2oBapB7Jo5G7jLLZAw_PaTnbZ45';
 
         const CONFIGURED = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
         const sb = CONFIGURED ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
@@ -364,18 +369,19 @@
             }[c]));
         }
 
-        // Each guest answers both events independently — plenty of people can
-        // make one but not the other.
+        // Each guest answers every event independently — plenty of people can
+        // make one but not the others.
         const EVENTS = [
-            { key: 'friday',   label: 'Fri &middot; Drinks + Bites' },
+            { key: 'friday',   label: 'Fri &middot; Post-Run Drinks + Bites' },
+            { key: 'welcome',  label: 'Fri &middot; Welcome Drinks' },
             { key: 'saturday', label: 'Sat &middot; Reception' },
         ];
 
-        function rowTemplate({ name, attending, attendingFriday, dietary }) {
+        function rowTemplate({ name, attending, attendingFriday, attendingWelcome, dietary }) {
             const row = document.createElement('div');
             row.className = 'guest-row';
             const uid = Math.random().toString(36).slice(2, 8);
-            const picked = { friday: attendingFriday, saturday: attending };
+            const picked = { friday: attendingFriday, welcome: attendingWelcome, saturday: attending };
 
             const eventFields = EVENTS.map(ev => {
                 const group = `${ev.key}-${uid}`;
@@ -433,6 +439,7 @@
                     name,
                     attending: prior ? prior.attending : undefined,
                     attendingFriday: prior ? prior.attendingFriday : undefined,
+                    attendingWelcome: prior ? prior.attendingWelcome : undefined,
                     dietary: prior ? prior.dietary : '',
                 });
             });
@@ -443,13 +450,14 @@
                         name: r.name,
                         attending: r.attending,
                         attendingFriday: r.attendingFriday,
+                        attendingWelcome: r.attendingWelcome,
                         dietary: r.dietary,
                     });
                 }
             });
 
             if (rows.length === 0) {
-                rows.push({ name: '', attending: undefined, attendingFriday: undefined, dietary: '' });
+                rows.push({ name: '', attending: undefined, attendingFriday: undefined, attendingWelcome: undefined, dietary: '' });
             }
             rows.forEach(r => rowsEl.appendChild(rowTemplate(r)));
 
@@ -535,6 +543,7 @@
                     name: r.guest_name,
                     attending: r.attending,
                     attendingFriday: r.attending_friday,
+                    attendingWelcome: r.attending_welcome,
                     dietary: r.dietary || '',
                 }));
             }
@@ -554,17 +563,19 @@
                 }
 
                 const friday = isAttending(row, 'friday');
+                const welcome = isAttending(row, 'welcome');
                 const saturday = isAttending(row, 'saturday');
-                if (friday === null || saturday === null) {
-                    setMessage(respMsg, `Please answer both events for ${name}.`, 'error');
+                if (friday === null || welcome === null || saturday === null) {
+                    setMessage(respMsg, `Please answer all three events for ${name}.`, 'error');
                     return;
                 }
 
-                const anyYes = friday || saturday;
+                const anyYes = friday || welcome || saturday;
                 responses.push({
                     name,
                     attending: saturday,
                     attending_friday: friday,
+                    attending_welcome: welcome,
                     // The field is hidden for a full decline, so don't ship a stale value.
                     dietary: anyYes ? row.querySelector('.dietary-input').value.trim() : '',
                 });
@@ -585,8 +596,8 @@
                 return;
             }
 
-            // Coming to either event counts as a yes for the confirmation page.
-            const anyYes = responses.some(r => r.attending || r.attending_friday);
+            // Coming to any event counts as a yes for the confirmation page.
+            const anyYes = responses.some(r => r.attending || r.attending_friday || r.attending_welcome);
             window.location.href = `/confirmed.html?attending=${anyYes ? 'yes' : 'no'}`;
         });
     </script>
