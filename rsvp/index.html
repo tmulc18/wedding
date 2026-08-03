@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSVP — Farbeen &amp; Tommy</title>
+    <link rel="icon" href="/apple-touch-icon.png" type="image/png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cedarville+Cursive&display=swap');
+
+        :root {
+            --bg-color: #f0ece3;
+            --text-dark: #D20A2E;      /* TensorFlow red, same as the main site */
+            --outline-color: #bebaa9;
+            --espresso-color: #d4c4b0;
+            --sketch-color: #1a1a1a;
+            --muted: #6b5e54;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: var(--sketch-color);
+            min-height: 100vh;
+        }
+
+        .page {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 3.5rem 1.5rem 6rem;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3.5rem;
+            align-items: start;
+        }
+
+        .photo img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        @media (max-width: 768px) {
+            .layout {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+            .photo { order: -1; }
+        }
+
+        .home-link {
+            display: inline-block;
+            margin-bottom: 2.5rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-family: 'Cedarville Cursive', cursive;
+            font-size: 1.5rem;
+        }
+        .home-link:hover { opacity: 0.75; }
+
+        h1 {
+            font-size: clamp(3.5rem, 9vw, 6rem);
+            font-weight: 800;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin: 0 0 1.25rem;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--sketch-color);
+            opacity: 0.55;
+            margin: 0 0 0.75rem;
+        }
+
+        /* Both events stack here, so the spacing lives on the wrapper rather
+           than each row — .venue is used on a <p> and an <a>, which makes
+           :last-of-type useless for the job. */
+        .venue-list { margin: 0 0 2.5rem; }
+
+        .venue {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            text-decoration: none;
+            margin: 0 0 0.9rem;
+            line-height: 1.7;
+            transition: opacity 0.15s;
+        }
+        .venue:last-child { margin-bottom: 0; }
+        a.venue:hover { opacity: 0.7; }
+        .venue strong { color: var(--sketch-color); }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--muted);
+            margin-bottom: 0.6rem;
+        }
+
+        input[type="tel"], input[type="text"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.85rem 1rem;
+            font-size: 1rem;
+            font-family: inherit;
+            background: transparent;
+            border: 1.5px solid var(--outline-color);
+            color: var(--sketch-color);
+            transition: border-color 0.15s;
+        }
+
+        input[type="tel"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--text-dark);
+        }
+
+        button {
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.85rem 1.5rem;
+            background: var(--text-dark);
+            color: var(--bg-color);
+            border: 2px solid var(--text-dark);
+            cursor: pointer;
+            transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: transparent;
+            color: var(--text-dark);
+        }
+        button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        button.ghost {
+            background: transparent;
+            color: var(--text-dark);
+        }
+        button.ghost:hover:not(:disabled) {
+            background-color: var(--text-dark);
+            color: var(--bg-color);
+        }
+
+        .submit-row {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .submit-row button { flex: 1; }
+
+        .message {
+            margin-top: 1rem;
+            min-height: 1.4em;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .message.error   { color: var(--text-dark); }
+        .message.success { color: #39582f; }
+
+        .hidden { display: none !important; }
+
+        .lookup-intro {
+            margin: 0 0 1.75rem;
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.6;
+            color: var(--sketch-color);
+        }
+
+        /* Response view */
+        .guest-row {
+            border-top: 1px solid var(--outline-color);
+            padding: 1.25rem 0;
+        }
+        .guest-row:last-of-type { border-bottom: 1px solid var(--outline-color); }
+
+        .guest-name { margin-bottom: 0.75rem; }
+
+        .yes-no {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .yes-no label {
+            flex: 1;
+            margin: 0;
+            padding: 0.65rem 0.5rem;
+            text-align: center;
+            border: 1.5px solid var(--outline-color);
+            cursor: pointer;
+            transition: all 0.15s;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+        .yes-no input { position: absolute; opacity: 0; pointer-events: none; }
+        .yes-no input:checked + label {
+            background: var(--text-dark);
+            color: var(--bg-color);
+            border-color: var(--text-dark);
+        }
+        .yes-no input:focus-visible + label { outline: 2px solid var(--text-dark); outline-offset: 2px; }
+
+        .event-label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--muted);
+            margin: 0.9rem 0 0.4rem;
+        }
+
+        /* Only worth asking of someone eating with us — hidden until they say
+           yes to at least one event, and skipped on submit when it is hidden. */
+        .dietary { margin-top: 0.9rem; }
+        .dietary input { font-size: 0.9rem; padding: 0.7rem 0.85rem; }
+        .guest-row.no-events .dietary { display: none; }
+
+        .add-another {
+            margin-top: 1.25rem;
+            background: transparent;
+            color: var(--text-dark);
+            border: 1.5px dashed var(--outline-color);
+            width: 100%;
+            padding: 0.85rem;
+        }
+        .add-another:hover:not(:disabled) {
+            border-color: var(--text-dark);
+            background-color: rgba(210, 10, 46, 0.06);
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <a class="home-link" href="/">&larr; back</a>
+
+        <div class="layout">
+            <div class="content">
+                <h1>RSVP</h1>
+                <p class="subtitle">SEPT 18 &ndash; 19, 2026 &middot; SAN FRANCISCO</p>
+                <div class="venue-list">
+                    <a class="venue"
+                       href="https://www.google.com/maps/search/?api=1&amp;query=Radhaus+Fort+Mason+San+Francisco"
+                       target="_blank" rel="noopener">
+                        <strong>Fri &middot; 12 PM</strong><br>Post-Run Drinks + Bites &mdash; Radhaus
+                    </a>
+                    <p class="venue">
+                        <strong>Fri &middot; 7&ndash;10 PM</strong><br>Welcome Drinks &mdash; location TBD
+                    </p>
+                    <a class="venue"
+                       href="https://www.google.com/maps/search/?api=1&amp;query=Ernest+restaurant+San+Francisco"
+                       target="_blank" rel="noopener">
+                        <strong>Sat &middot; 6 PM</strong><br>Reception at Ernest
+                    </a>
+                </div>
+
+                <!-- ===== Lookup view ===== -->
+                <section id="lookup-view">
+                    <p class="lookup-intro">You or your partner can RSVP for one another.</p>
+                    <form id="lookup-form" novalidate>
+                        <label for="phone">Your phone number</label>
+                        <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(415) 555-0123" required>
+                        <div class="submit-row">
+                            <button type="submit" id="lookup-btn">Look me up</button>
+                        </div>
+                    </form>
+                    <p id="lookup-message" class="message" role="status"></p>
+                </section>
+
+                <!-- ===== Response view ===== -->
+                <section id="response-view" class="hidden">
+                    <form id="response-form" novalidate>
+                        <div id="rows"></div>
+                        <button type="button" id="add-row" class="add-another hidden">+ add another family member</button>
+                        <div class="submit-row">
+                            <button type="button" id="back-btn" class="ghost">Back</button>
+                            <button type="submit" id="submit-btn">Submit RSVP</button>
+                        </div>
+                    </form>
+                    <p id="response-message" class="message" role="status"></p>
+                </section>
+            </div>
+
+            <div class="photo">
+                <img src="/couple-portrait.jpg" alt="Farbeen and Tommy" width="1067" height="1600">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // ===== Supabase config =====
+        // Fill these in once the project exists. The anon/publishable key is public
+        // by design — RLS denies everything and the security-definer RPCs do the work.
+        // While they're blank the form stays up but tells guests RSVPs aren't open yet.
+        const SUPABASE_URL = 'https://zgshwwbeasykxeztynlx.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_wEwU2oBapB7Jo5G7jLLZAw_PaTnbZ45';
+
+        const CONFIGURED = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
+        const sb = CONFIGURED ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+        // ===== Phone normalization (mirror of scripts/_phone.py) =====
+        function normalizePhone(raw) {
+            const digits = (raw || '').trim().replace(/[\s\-().]/g, '');
+            if (digits.startsWith('+')) {
+                const rest = digits.slice(1);
+                return /^\d{10,}$/.test(rest) ? digits : null;
+            }
+            if (!/^\d+$/.test(digits)) return null;
+            if (digits.length === 10) return '+1' + digits;
+            if (digits.length === 11 && digits.startsWith('1')) return '+' + digits;
+            // Bare international number (e.g. Croatia 385...): treat as E.164.
+            if (digits.length >= 11 && digits.length <= 15) return '+' + digits;
+            return null;
+        }
+
+        // ===== State =====
+        let currentPhone = null;
+        let currentCap = 1;
+        let knownGuests = [];
+        let existingResponses = [];  // prior RSVP rows: [{ name, attending: bool }]
+
+        // ===== DOM =====
+        const lookupView = document.getElementById('lookup-view');
+        const responseView = document.getElementById('response-view');
+        const phoneInput = document.getElementById('phone');
+        const lookupBtn = document.getElementById('lookup-btn');
+        const lookupMsg = document.getElementById('lookup-message');
+        const submitBtn = document.getElementById('submit-btn');
+        const respMsg = document.getElementById('response-message');
+        const rowsEl = document.getElementById('rows');
+        const addRowBtn = document.getElementById('add-row');
+
+        function setMessage(el, text, kind) {
+            el.textContent = text;
+            el.className = 'message' + (kind ? ' ' + kind : '');
+        }
+
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
+        // Each guest answers every event independently — plenty of people can
+        // make one but not the others.
+        const EVENTS = [
+            { key: 'friday',   label: 'Fri &middot; Post-Run Drinks + Bites' },
+            { key: 'welcome',  label: 'Fri &middot; Welcome Drinks' },
+            { key: 'saturday', label: 'Sat &middot; Reception' },
+        ];
+
+        function rowTemplate({ name, attending, attendingFriday, attendingWelcome, dietary }) {
+            const row = document.createElement('div');
+            row.className = 'guest-row';
+            const uid = Math.random().toString(36).slice(2, 8);
+            const picked = { friday: attendingFriday, welcome: attendingWelcome, saturday: attending };
+
+            const eventFields = EVENTS.map(ev => {
+                const group = `${ev.key}-${uid}`;
+                const yesChecked = picked[ev.key] === true ? ' checked' : '';
+                const noChecked  = picked[ev.key] === false ? ' checked' : '';
+                return `
+                <span class="event-label">${ev.label}</span>
+                <div class="yes-no" data-event="${ev.key}">
+                    <input type="radio" id="${group}-y" name="${group}" value="yes"${yesChecked}>
+                    <label for="${group}-y">Attending</label>
+                    <input type="radio" id="${group}-n" name="${group}" value="no"${noChecked}>
+                    <label for="${group}-n">Can't make it</label>
+                </div>`;
+            }).join('');
+
+            row.innerHTML = `
+                <div class="guest-name"><input class="name-input" type="text" placeholder="Guest name" autocomplete="name" value="${escapeHtml(name || '')}" required></div>
+                ${eventFields}
+                <div class="dietary"><input class="dietary-input" type="text" placeholder="Dietary restrictions or allergies (optional)" aria-label="Dietary restrictions or allergies" value="${escapeHtml(dietary || '')}"></div>
+            `;
+
+            // Ask about food only once they're coming to something.
+            const syncDietary = () => {
+                const anyYes = EVENTS.some(ev => isAttending(row, ev.key) === true);
+                row.classList.toggle('no-events', !anyYes);
+            };
+            row.querySelectorAll('input[type="radio"]').forEach(r =>
+                r.addEventListener('change', syncDietary));
+            syncDietary();
+
+            return row;
+        }
+
+        // true / false / null when the guest hasn't answered that event yet.
+        function isAttending(row, eventKey) {
+            const checked = row.querySelector(`.yes-no[data-event="${eventKey}"] input:checked`);
+            return checked ? checked.value === 'yes' : null;
+        }
+
+        function renderResponseView() {
+            rowsEl.innerHTML = '';
+
+            // Merge known guests with any prior responses so returning guests see
+            // (and can edit) what they already submitted. Match on name, case- and
+            // whitespace-insensitively; append any prior names not on the roster.
+            const norm = s => (s || '').trim().toLowerCase();
+            const priorByName = new Map(existingResponses.map(r => [norm(r.name), r]));
+            const rows = [];
+            const usedNames = new Set();
+
+            knownGuests.forEach(name => {
+                const prior = priorByName.get(norm(name));
+                if (prior) usedNames.add(norm(name));
+                rows.push({
+                    name,
+                    attending: prior ? prior.attending : undefined,
+                    attendingFriday: prior ? prior.attendingFriday : undefined,
+                    attendingWelcome: prior ? prior.attendingWelcome : undefined,
+                    dietary: prior ? prior.dietary : '',
+                });
+            });
+            // Extra family members the guest previously added themselves.
+            existingResponses.forEach(r => {
+                if (!usedNames.has(norm(r.name))) {
+                    rows.push({
+                        name: r.name,
+                        attending: r.attending,
+                        attendingFriday: r.attendingFriday,
+                        attendingWelcome: r.attendingWelcome,
+                        dietary: r.dietary,
+                    });
+                }
+            });
+
+            if (rows.length === 0) {
+                rows.push({ name: '', attending: undefined, attendingFriday: undefined, attendingWelcome: undefined, dietary: '' });
+            }
+            rows.forEach(r => rowsEl.appendChild(rowTemplate(r)));
+
+            updateAddButton();
+            lookupView.classList.add('hidden');
+            responseView.classList.remove('hidden');
+            if (existingResponses.length > 0) {
+                setMessage(respMsg, 'We found your previous RSVP below. Update it and resubmit anytime.', 'success');
+            } else {
+                setMessage(respMsg, '', '');
+            }
+        }
+
+        function updateAddButton() {
+            const count = rowsEl.children.length;
+            const initialCount = Math.max(knownGuests.length, 1);
+            if (count < currentCap) {
+                addRowBtn.classList.remove('hidden');
+                addRowBtn.textContent = count <= initialCount
+                    ? 'Add + 1'
+                    : '+ add another family member';
+            } else {
+                addRowBtn.classList.add('hidden');
+            }
+        }
+
+        addRowBtn.addEventListener('click', () => {
+            if (rowsEl.children.length >= currentCap) return;
+            rowsEl.appendChild(rowTemplate({ name: '' }));
+            updateAddButton();
+        });
+
+        document.getElementById('back-btn').addEventListener('click', () => {
+            responseView.classList.add('hidden');
+            lookupView.classList.remove('hidden');
+            setMessage(lookupMsg, '', '');
+        });
+
+        // ===== Lookup =====
+        document.getElementById('lookup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!CONFIGURED) {
+                setMessage(lookupMsg, "RSVPs aren't open just yet — check back soon.", 'error');
+                console.warn('Supabase is not configured: set SUPABASE_URL and SUPABASE_ANON_KEY in rsvp/index.html');
+                return;
+            }
+
+            const phone = normalizePhone(phoneInput.value);
+            if (!phone) {
+                setMessage(lookupMsg, "That doesn't look like a valid phone number. Try with area code.", 'error');
+                return;
+            }
+            lookupBtn.disabled = true;
+            setMessage(lookupMsg, 'Looking…', '');
+
+            const [guestRes, rsvpRes] = await Promise.all([
+                sb.rpc('lookup_guest', { p_phone: phone }),
+                sb.rpc('lookup_rsvp', { p_phone: phone }),
+            ]);
+            lookupBtn.disabled = false;
+
+            const { data, error } = guestRes;
+            if (error) {
+                setMessage(lookupMsg, "Something went wrong. Please try again in a moment.", 'error');
+                console.error(error);
+                return;
+            }
+            if (!data || data.length === 0) {
+                setMessage(lookupMsg, "Sorry, couldn't find you. Please try again. Try your partner's number if you are having issues.", 'error');
+                return;
+            }
+
+            const row = data[0];
+            currentPhone = row.phone;
+            currentCap = row.num_allowed;
+            knownGuests = row.guests || [];
+            // Prior submissions (if any), so the guest can review/edit them.
+            if (rsvpRes.error) {
+                console.error(rsvpRes.error);
+                existingResponses = [];
+            } else {
+                existingResponses = (rsvpRes.data || []).map(r => ({
+                    name: r.guest_name,
+                    attending: r.attending,
+                    attendingFriday: r.attending_friday,
+                    attendingWelcome: r.attending_welcome,
+                    dietary: r.dietary || '',
+                }));
+            }
+            renderResponseView();
+        });
+
+        // ===== Submit RSVP =====
+        document.getElementById('response-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const responses = [];
+            for (const row of rowsEl.children) {
+                const name = row.querySelector('.name-input').value.trim();
+
+                if (!name) {
+                    setMessage(respMsg, 'Please enter a name for each guest.', 'error');
+                    return;
+                }
+
+                const friday = isAttending(row, 'friday');
+                const welcome = isAttending(row, 'welcome');
+                const saturday = isAttending(row, 'saturday');
+                if (friday === null || welcome === null || saturday === null) {
+                    setMessage(respMsg, `Please answer all three events for ${name}.`, 'error');
+                    return;
+                }
+
+                const anyYes = friday || welcome || saturday;
+                responses.push({
+                    name,
+                    attending: saturday,
+                    attending_friday: friday,
+                    attending_welcome: welcome,
+                    // The field is hidden for a full decline, so don't ship a stale value.
+                    dietary: anyYes ? row.querySelector('.dietary-input').value.trim() : '',
+                });
+            }
+
+            submitBtn.disabled = true;
+            setMessage(respMsg, 'Sending…', '');
+
+            const { error } = await sb.rpc('submit_rsvp', {
+                p_phone: currentPhone,
+                p_responses: responses,
+            });
+
+            if (error) {
+                submitBtn.disabled = false;
+                setMessage(respMsg, "Couldn't save your RSVP. Please try again.", 'error');
+                console.error(error);
+                return;
+            }
+
+            // Coming to any event counts as a yes for the confirmation page.
+            const anyYes = responses.some(r => r.attending || r.attending_friday || r.attending_welcome);
+            window.location.href = `/confirmed.html?attending=${anyYes ? 'yes' : 'no'}`;
+        });
+    </script>
+</body>
+
+</html>
