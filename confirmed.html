@@ -93,6 +93,10 @@
             flex-wrap: wrap;
         }
 
+        /* A second label now follows a button row (Google takes one event at a
+           time), and .cal-label only carries bottom margin — give it room. */
+        .cal-row + .cal-label { margin-top: 1.75rem; }
+
         .cal-btn {
             flex: 1 1 240px;
             font-family: inherit;
@@ -218,14 +222,23 @@
                 </a>
             </div>
 
-            <!-- Only the reception gets a calendar entry — Friday's location is
-                 still TBD, so an invite for it would just be wrong. -->
-            <span class="cal-label">Add the reception to your calendar</span>
+            <!-- The .ics carries both events with a fixed venue. Welcome Drinks is
+                 left out on purpose — its location is still TBD, so an invite for
+                 it would just be wrong. -->
+            <span class="cal-label">Add the weekend to your calendar</span>
             <div class="cal-row">
                 <a class="cal-btn" href="wedding.ics" download="farbeen-tommy-wedding.ics">Apple Calendar / Outlook</a>
+            </div>
+
+            <!-- Google's template URL takes one event at a time, hence two links. -->
+            <span class="cal-label">Or add to Google Calendar</span>
+            <div class="cal-row">
+                <a class="cal-btn ghost"
+                   href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Farbeen+%26+Tommy+%E2%80%94+Post-Run+Drinks+%2B+Bites&dates=20260918T120000/20260918T150000&ctz=America/Los_Angeles&location=Radhaus%2C+Fort+Mason+Center%2C+San+Francisco%2C+CA&details=Details+at+https%3A%2F%2Fsep19.party"
+                   target="_blank" rel="noopener">Fri &middot; Radhaus</a>
                 <a class="cal-btn ghost"
                    href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Farbeen+%26+Tommy%27s+Wedding&dates=20260919T180000/20260920T000000&ctz=America/Los_Angeles&location=Ernest%2C+San+Francisco%2C+CA&details=Details+at+https%3A%2F%2Fsep19.party"
-                   target="_blank" rel="noopener">Google Calendar</a>
+                   target="_blank" rel="noopener">Sat &middot; Reception</a>
             </div>
         </section>
 
