@@ -21,6 +21,17 @@ RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU
 END:DAYLIGHT
 END:VTIMEZONE
 BEGIN:VEVENT
+UID:run-walk-2026-09-18@sep19.party
+DTSTAMP:20250101T000000Z
+DTSTART;TZID=America/Los_Angeles:20260918T103000
+DTEND;TZID=America/Los_Angeles:20260918T120000
+SUMMARY:Farbeen & Tommy - Run/Walk (optional)
+LOCATION:Crissy Field\, San Francisco\, CA
+DESCRIPTION:Optional - drinks at Radhaus follow at 12 PM either way. Detail
+ s at https://sep19.party
+URL:https://sep19.party
+END:VEVENT
+BEGIN:VEVENT
 UID:post-run-drinks-2026-09-18@sep19.party
 DTSTAMP:20250101T000000Z
 DTSTART;TZID=America/Los_Angeles:20260918T120000
