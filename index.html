@@ -497,6 +497,13 @@
                 letter-spacing: 1px;
             }
 
+            /* Event names longer than a third of the row (e.g. "Post-Run Drinks
+               + Bites") used to overflow their grid track and run into the venue,
+               since every cell is nowrap. Let them wrap and keep a gutter. */
+            .event-list li            { column-gap: 0.75rem; }
+            .event-list span.event,
+            .event-list span.location { white-space: normal; }
+
             .event-note {
                 font-size: 3vw;
             }
@@ -718,7 +725,10 @@
                 <li><span class="time">12 PM</span><span class="event">Post-Run Drinks + Bites</span><span class="location"><a href="https://www.google.com/maps/search/?api=1&amp;query=Radhaus+Fort+Mason+San+Francisco" target="_blank" rel="noopener">Radhaus</a></span></li>
                 <li><span class="time">7&ndash;10 PM</span><span class="event">Welcome Drinks</span><span class="location">Location TBD</span></li>
             </ul>
-            <p class="event-note">run optional &mdash; come for the drinks either way.</p>
+            <p class="event-note">run optional &mdash; come for the drinks either way.<br>
+                <span class="dress">welcome drinks: summer casual (it's summer in SF).</span>
+                <span class="attire">sundresses and khakis/jeans.</span>
+            </p>
         </div>
 
         <div class="event-block">
