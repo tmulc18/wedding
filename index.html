@@ -323,14 +323,19 @@
         .event-list li {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
+            column-gap: 0.75rem;
             align-items: center;
             border-bottom: 1px solid rgba(0, 0, 0, 0.15);
             padding-bottom: 0.5rem;
         }
 
+        /* Only the time is guaranteed short enough to never wrap. The event and
+           venue must be allowed to break: the list is width-capped but the type
+           is sized in vw, so on a wide screen a long name like "Post-Run Drinks
+           + Bites" outgrows its third of the row and runs into the venue. */
         .event-list span.time     { color: var(--sketch-color); white-space: nowrap; text-align: left;   }
-        .event-list span.event    { color: var(--sketch-color); white-space: nowrap; text-align: center; }
-        .event-list span.location { color: var(--sketch-color); white-space: nowrap; text-align: right;  }
+        .event-list span.event    { color: var(--sketch-color); text-align: center; }
+        .event-list span.location { color: var(--sketch-color); text-align: right;  }
         /* Linked venues sit in the same column as plain-text ones — keep them the
            same colour (never the browser's blue/purple) and let a light underline
            carry the affordance. */
@@ -496,13 +501,6 @@
                 font-size: 3.2vw;
                 letter-spacing: 1px;
             }
-
-            /* Event names longer than a third of the row (e.g. "Post-Run Drinks
-               + Bites") used to overflow their grid track and run into the venue,
-               since every cell is nowrap. Let them wrap and keep a gutter. */
-            .event-list li            { column-gap: 0.75rem; }
-            .event-list span.event,
-            .event-list span.location { white-space: normal; }
 
             .event-note {
                 font-size: 3vw;
@@ -748,11 +746,10 @@
             <ul class="event-list">
                 <li><span class="time">10:30 AM</span><span class="event">Run/Walk</span><span class="location">Crissy Field</span></li>
                 <li><span class="time">12 PM</span><span class="event">Post-Run Drinks + Bites</span><span class="location"><a href="https://www.google.com/maps/search/?api=1&amp;query=Radhaus+Fort+Mason+San+Francisco" target="_blank" rel="noopener">Radhaus</a></span></li>
-                <li><span class="time">7&ndash;10 PM</span><span class="event">Welcome Drinks</span><span class="location">Location TBD</span></li>
+                <li><span class="time">7&ndash;10 PM</span><span class="event">Welcome Drinks</span><span class="location"><a href="https://www.google.com/maps/search/?api=1&amp;query=Birba+San+Francisco" target="_blank" rel="noopener">Birba</a></span></li>
             </ul>
             <p class="event-note">run optional &mdash; come for the drinks either way.<br>
-                <span class="dress">welcome drinks: summer casual (it's summer in SF).</span>
-                <span class="attire">sundresses and khakis/jeans.</span>
+                SF summer chic. sundresses and khakis/jeans are welcome
             </p>
         </div>
 
