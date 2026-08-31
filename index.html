@@ -543,6 +543,31 @@
             }
 
         }
+
+        /* Very small phones. Four nav labels plus the logo stop fitting on one
+           line: "Things to Do" wrapped to two rows, which pushed RSVP off the
+           right edge and shoved the logo under "Events". Tighten the type and
+           gaps, and never let a multi-word label break. */
+        @media (max-width: 480px) {
+            .site-nav {
+                padding: 0.75rem 0.9rem;
+            }
+
+            .logo-svg {
+                width: 28px;
+                height: 28px;
+            }
+
+            .site-nav-links {
+                gap: 0.7rem;
+            }
+
+            .site-nav-links a {
+                font-size: 0.62rem;
+                letter-spacing: 0.04em;
+                white-space: nowrap;
+            }
+        }
     </style>
 </head>
 
