@@ -39,13 +39,23 @@ DTEND;TZID=America/Los_Angeles:20260918T150000
 SUMMARY:Farbeen & Tommy - Post-Run Drinks + Bites
 LOCATION:Radhaus\, Fort Mason Center\, San Francisco\, CA
 DESCRIPTION:Optional run/walk at Crissy Field at 10:30 AM beforehand. Welco
- me Drinks follow at 7 PM. Details at https://sep19.party
+ me Drinks + Apps follow at 6 PM. Details at https://sep19.party
+URL:https://sep19.party
+END:VEVENT
+BEGIN:VEVENT
+UID:welcome-drinks-2026-09-18@sep19.party
+DTSTAMP:20250101T000000Z
+DTSTART;TZID=America/Los_Angeles:20260918T180000
+DTEND;TZID=America/Los_Angeles:20260918T210000
+SUMMARY:Farbeen & Tommy - Welcome Drinks + Apps
+LOCATION:Birba\, San Francisco\, CA
+DESCRIPTION:Details at https://sep19.party
 URL:https://sep19.party
 END:VEVENT
 BEGIN:VEVENT
 UID:wedding-2026-09-19@sep19.party
 DTSTAMP:20250101T000000Z
-DTSTART;TZID=America/Los_Angeles:20260919T180000
+DTSTART;TZID=America/Los_Angeles:20260919T183000
 DTEND;TZID=America/Los_Angeles:20260920T000000
 SUMMARY:Farbeen & Tommy's Wedding
 LOCATION:Ernest\, San Francisco\, CA
